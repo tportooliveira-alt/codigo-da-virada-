@@ -1,0 +1,7 @@
+_frames/
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+.vscode/
+.idea/
