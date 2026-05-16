@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallpaper Deluxe - Fernanda ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', 'Georgia', serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Partículas de luz flutuante */
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #ffd700, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-particle 8s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 80%; top: 15%; animation-delay: 1s; }
+        .particle:nth-child(3) { left: 20%; top: 70%; animation-delay: 2s; }
+        .particle:nth-child(4) { left: 85%; top: 60%; animation-delay: 3s; }
+        .particle:nth-child(5) { left: 50%; top: 10%; animation-delay: 1.5s; }
+        .particle:nth-child(6) { left: 15%; top: 50%; animation-delay: 2.5s; }
+        .particle:nth-child(7) { left: 70%; top: 80%; animation-delay: 3.5s; }
+        .particle:nth-child(8) { left: 40%; top: 85%; animation-delay: 0.5s; }
+
+        @keyframes float-particle {
+            0% { opacity: 0; transform: translateY(0) scale(0.5); }
+            50% { opacity: 1; transform: translateY(-30px) scale(1); }
+            100% { opacity: 0; transform: translateY(-60px) scale(0.5); }
+        }
+
+        /* Corações animados */
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            animation: float-heart 6s infinite ease-in-out;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.5));
+        }
+
+        .heart:nth-child(1) { left: 5%; top: 25%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 92%; top: 35%; animation-delay: 1.2s; }
+        .heart:nth-child(3) { left: 25%; top: 75%; animation-delay: 2.4s; }
+        .heart:nth-child(4) { left: 88%; top: 70%; animation-delay: 1.8s; }
+
+        @keyframes float-heart {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.4; }
+            50% { transform: translateY(-40px) rotate(15deg); opacity: 0.8; }
+        }
+
+        /* Conteúdo principal */
+        .container {
+            text-align: center;
+            z-index: 10;
+            max-width: 90%;
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 4rem 3rem;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 215, 0, 0.2);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            animation: slideIn 1s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: 3px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #ffed4e;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+
+        .divider {
+            width: 150px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ffd700, transparent);
+            margin: 2rem auto;
+        }
+
+        .messages-container {
+            margin: 2rem 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .message {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin: 1.8rem 0;
+            line-height: 1.8;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            animation: fadeInUp 1s ease-out forwards;
+            opacity: 0;
+        }
+
+        .message:nth-child(1) { animation-delay: 0.2s; }
+        .message:nth-child(2) { animation-delay: 0.4s; }
+        .message:nth-child(3) { animation-delay: 0.6s; }
+        .message:nth-child(4) { animation-delay: 0.8s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message strong {
+            color: #ffed4e;
+            font-weight: 600;
+        }
+
+        .divider-2 {
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ffed4e, transparent);
+            margin: 2rem auto;
+        }
+
+        .final-message {
+            font-size: 2.2rem;
+            color: #ffed4e;
+            margin: 2rem 0;
+            font-weight: 700;
+            letter-spacing: 3px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+            50% { opacity: 0.8; text-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+        }
+
+        .signature {
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            color: #b0b0b0;
+            font-style: italic;
+        }
+
+        /* Scrollbar customizado */
+        .messages-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .messages-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #ffd700, #ffed4e);
+            border-radius: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .message {
+                font-size: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1.5rem;
+                border-radius: 20px;
+            }
+
+            .final-message {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Partículas de ouro flutuando -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Corações -->
+    <div class="hearts">
+        <div class="heart">💕</div>
+        <div class="heart">💖</div>
+        <div class="heart">💗</div>
+        <div class="heart">💝</div>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="container">
+        <h1>FERNANDA</h1>
+        <div class="subtitle">✨ Meu Amor ✨</div>
+
+        <div class="divider"></div>
+
+        <div class="messages-container">
+            <div class="message">
+                Te amo com a intensidade de <strong>mil vidas</strong> vividas ao seu lado.
+            </div>
+
+            <div class="message">
+                Seus olhos são meu infinito, seu sorriso é minha razão de ser.
+            </div>
+
+            <div class="message">
+                <strong>Você</strong> é a música que faz meu coração dançar todos os dias.
+            </div>
+
+            <div class="message">
+                Obrigado por escolher estar comigo, por ser tudo que sempre sonhei.
+            </div>
+        </div>
+
+        <div class="divider-2"></div>
+
+        <div class="final-message">
+            🌹 TE AMO 🌹
+        </div>
+
+        <div class="signature">
+            — Para sempre, para você
+        </div>
+    </div>
+</body>
+</html>
