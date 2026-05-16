@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallpaper Romântico - Para Fernanda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffd6e8 0%, #e8b4f0 50%, #b4d9f5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            max-width: 90%;
+        }
+
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.3);
+            font-size: 2rem;
+            animation: float 6s infinite;
+        }
+
+        .heart:nth-child(1) { left: 10%; top: 15%; animation-delay: 0s; }
+        .heart:nth-child(2) { left: 80%; top: 25%; animation-delay: 1s; }
+        .heart:nth-child(3) { left: 20%; top: 70%; animation-delay: 2s; }
+        .heart:nth-child(4) { left: 85%; top: 65%; animation-delay: 3s; }
+        .heart:nth-child(5) { left: 50%; top: 10%; animation-delay: 1.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
+            50% { transform: translateY(-20px) rotate(10deg); opacity: 0.6; }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: #d63384;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            letter-spacing: 2px;
+        }
+
+        .divider {
+            width: 200px;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #d63384, transparent);
+            margin: 1.5rem auto;
+        }
+
+        .messages {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 2.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255, 182, 193, 0.3);
+        }
+
+        .message {
+            font-size: 1.3rem;
+            color: #333;
+            margin: 1.5rem 0;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .message strong {
+            color: #d63384;
+            font-style: normal;
+        }
+
+        .signature {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: #d63384;
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+
+        .footer {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #999;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .message {
+                font-size: 1rem;
+            }
+
+            .messages {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts">
+        <div class="heart">💕</div>
+        <div class="heart">💕</div>
+        <div class="heart">💕</div>
+        <div class="heart">💕</div>
+        <div class="heart">💕</div>
+    </div>
+
+    <div class="container">
+        <h1>FERNANDA</h1>
+        <div class="divider"></div>
+
+        <div class="messages">
+            <div class="message">
+                <strong>Te amo</strong> com a força de um homem que sabe exatamente o valor do que tem.
+            </div>
+
+            <div class="message">
+                Você é o motivo pelo qual acredito em <strong>para sempre</strong>.
+            </div>
+
+            <div class="message">
+                Meu coração bate mais forte a cada amanhecer ao seu lado.
+            </div>
+
+            <div class="message">
+                <strong>Você é minha paz, meu lar, meu tudo.</strong>
+            </div>
+
+            <div class="message">
+                Obrigado por existir. Obrigado por me escolher.
+            </div>
+
+            <div class="signature">
+                TE AMO ✨
+            </div>
+
+            <div class="footer">
+                — Com todo o meu coração
+            </div>
+        </div>
+    </div>
+</body>
+</html>
