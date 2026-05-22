@@ -53,20 +53,32 @@ function FAQ() {
       a: "Sim — o método foi pensado exatamente pra quem está apertado. Os capítulos partem de zero, sem assumir que você tem reserva, investimentos ou sobra no fim do mês. A proposta é organizar o que você já tem antes de pensar em ganhar mais.",
     },
     {
-      q: "Como recebo o e-book?",
-      a: "Logo após a confirmação do pagamento, o link de download chega no seu e-mail. É um PDF que abre no celular, computador ou tablet. Sem cadastro em plataforma, sem aula em vídeo — leitura direta.",
+      q: "Como recebo o material?",
+      a: "Logo após a confirmação do pagamento, o link chega no seu e-mail. No Kit Completo, você recebe os 7 PDFs originais, o link do ebook web interativo e instruções pra instalar os 4 apps no celular (em 30 segundos cada). Sem cadastro em plataforma, sem aula em vídeo — leitura e prática diretas.",
+    },
+    {
+      q: "Como funcionam os 4 apps interativos?",
+      a: "São PWAs (Progressive Web Apps). Você abre o link no Chrome ou Safari, toca em \"Instalar app\" (Android) ou \"Adicionar à tela de início\" (iPhone), e o ícone vira app de verdade no celular. Funciona offline depois de instalado, ocupa quase nada de espaço e todos os dados (anotações, valores, progresso) ficam SÓ no seu aparelho — sem servidor, sem login, sem rastreamento.",
     },
     {
       q: "Tem suporte?",
-      a: "Sim. Em caso de dúvida sobre o produto ou problema com o download, você pode escrever pra tportooliveira@gmail.com que respondemos. Não é mentoria individual, é suporte ao produto.",
+      a: "Sim. Em caso de dúvida sobre o produto ou problema com o download, você pode escrever pra tportooliveira@gmail.com que respondemos em até 48h úteis. Não é mentoria individual, é suporte ao produto.",
     },
     {
       q: "Funciona pra autônomo, CLT ou MEI?",
       a: "Os três perfis foram considerados na hora de escrever. A diferença prática aparece no capítulo de receita variável e no script de negociação — o passo a passo é o mesmo, o que muda é o que entra na conta de cada um.",
     },
     {
+      q: "O que é o Virada App (R$ 197)?",
+      a: "É um app completo de controle financeiro com dashboard, gestão de dívidas, metas, missões gamificadas e categorização inteligente. Está em fase final de testes e o lançamento está previsto pra junho/2026. Quem comprou o Kit Completo (R$ 67) tem upgrade preferencial por R$ 97 (em vez de R$ 197 cheio).",
+    },
+    {
+      q: "Vai ter audiobook?",
+      a: "Sim, em desenvolvimento. Estamos produzindo a versão audiobook IMERSIVA do Livro Premium Novela (50 capítulos) — com voz humana, trilha sonora e efeitos (porta rangendo, ambiente, sons da cena). Lançamento previsto pra 2º semestre de 2026, como produto premium separado. Quem comprar o Kit antes do lançamento entra na lista de early-bird com 50% off.",
+    },
+    {
       q: "E se eu não gostar?",
-      a: "Garantia incondicional de 7 dias. Se nos primeiros 7 dias depois da compra você achar que não é pra você, basta enviar um e-mail pedindo o reembolso. Sem pergunta, sem burocracia.",
+      a: "Garantia incondicional de 30 dias. Se nos primeiros 30 dias depois da compra você achar que não é pra você, basta enviar um e-mail pedindo o reembolso. Sem pergunta, sem burocracia, sem letra miúda. Você pode até manter os PDFs — não exigimos devolução.",
     },
   ];
 
@@ -104,11 +116,11 @@ function FAQ() {
           </faqMotion.div>
           <div className="flex-1">
             <h3 className="font-heading italic text-white text-3xl md:text-4xl leading-none" style={{ letterSpacing: "-1px" }}>
-              Garantia incondicional de 7 dias
+              Garantia incondicional de 30 dias
             </h3>
             <p className="mt-2 text-sm md:text-base text-white/80 font-body font-light leading-snug max-w-2xl">
-              Comprou, abriu, leu — e se não fizer sentido pra você, devolvemos cada centavo.
-              Sem questionário, sem letra miúda.
+              Comprou, abriu, aplicou — e se não fizer sentido pra você, devolvemos cada centavo nos primeiros 30 dias.
+              Sem questionário, sem letra miúda, sem precisar devolver os arquivos.
             </p>
           </div>
         </faqMotion.div>

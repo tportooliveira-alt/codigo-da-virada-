@@ -75,7 +75,7 @@ function Hero() {
                 Edição 2026
               </span>
               <span className="text-sm text-white/90 font-body">
-                com Selic 14,50% e Desenrola Brasil
+                Selic 14,50% · Desenrola Brasil · Dados BACEN
               </span>
             </heroMotion.div>
           </heroMotion.div>
@@ -83,7 +83,7 @@ function Hero() {
           {/* Headline */}
           <div className="mt-6 max-w-4xl">
             <BlurText
-              text="Reorganize suas finanças antes do próximo boleto chegar"
+              text="Você pagou R$ 3.200 em juros este ano sem saber."
               className="text-5xl md:text-6xl lg:text-[5rem] font-heading italic text-white leading-[0.92]"
               style={{ letterSpacing: "-3px" }}
             />
@@ -94,8 +94,7 @@ function Hero() {
             {...heroEnter(0.9)}
             className="mt-5 text-sm md:text-base text-white/85 max-w-xl font-body font-light leading-snug"
           >
-            Método brasileiro com 7 capítulos curtos, plano de 7 dias e scripts práticos de negociação.
-            Pra quem está cansado de teoria gringa.
+            Dado oficial do <strong className="text-white">Banco Central</strong>: o brasileiro médio perde R$ 3.200/ano em juros, taxas e tarifas evitáveis. Este método te mostra cada vazamento — e como fechá-los em 7 dias.
           </heroMotion.p>
 
           {/* CTAs */}
@@ -112,7 +111,7 @@ function Hero() {
               transition={{ duration: 0.18, ease: "easeOut" }}
               className="liquid-glass-strong rounded-full px-5 py-2.5 text-sm font-medium text-white inline-flex items-center gap-1.5"
             >
-              Começar por R$ 9,90
+              Quero começar por R$ 17
               <ArrowUpRight className="h-5 w-5" />
             </heroMotion.a>
             <heroMotion.a
@@ -121,7 +120,7 @@ function Hero() {
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="inline-flex items-center gap-2 text-sm font-medium text-white"
             >
-              Ver Kit Completo
+              Ver Kit Completo R$ 67
               <ArrowRight className="h-4 w-4" />
             </heroMotion.a>
           </heroMotion.div>
@@ -131,9 +130,9 @@ function Hero() {
             {...heroEnter(1.3)}
             className="flex flex-wrap justify-center gap-3 md:gap-4 mt-10 w-full max-w-2xl"
           >
-            <StatCard Icon={BookIcon} value={7} label="Capítulos curtos" />
-            <StatCard Icon={GiftIcon} value={4} label="Bônus inclusos no Kit" />
-            <StatCard Icon={ShieldIcon} value={7} suffix=" dias" label="Garantia incondicional" />
+            <StatCard Icon={BookIcon} value={60} label="Ideias de renda extra" />
+            <StatCard Icon={GiftIcon} value={4} label="Apps interativos inclusos" />
+            <StatCard Icon={ShieldIcon} value={30} suffix=" dias" label="Garantia incondicional" />
           </heroMotion.div>
         </heroMotion.div>
       </div>

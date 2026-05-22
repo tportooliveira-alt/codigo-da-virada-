@@ -188,8 +188,7 @@ function Products() {
             de entrada
           </h2>
           <p className="mt-6 text-white/75 font-body font-light max-w-xl leading-snug">
-            Comece pelo essencial, leve o método completo ou veja a prévia do app —
-            você decide o tamanho do passo.
+            Comece pelo essencial (R$ 17), leve o método completo (R$ 67 — mais escolhido) ou garanta o app antes do lançamento (R$ 197). Pagamento único, sem mensalidade.
           </p>
         </prodMotion.div>
 
@@ -198,16 +197,16 @@ function Products() {
             index={0}
             bgSrc="assets/CAPA_LIVRO_POPULAR.jpg"
             bgFallback="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1400&q=80"
-            tags={["Entrada", "Leitura de 1h", "7 capítulos"]}
-            title="Edição Popular"
-            price="R$ 9,90"
-            description="O método essencial em 7 capítulos curtos com plano de 7 dias. Pra quem quer testar antes de investir no pacote completo."
+            tags={["Entrada", "Leitura de 1h", "Sem app"]}
+            title="Edição Essencial"
+            price="R$ 17"
+            description="O método em 7 capítulos curtos + Plano de 7 Dias interativo (PWA). Pra quem quer testar antes de levar o pacote completo."
             bullets={[
-              "7 capítulos curtos e diretos",
-              "Plano prático de 7 dias",
-              "E-book em PDF — leitura no celular",
+              "7 capítulos curtos e diretos (PDF + leitura web)",
+              "Plano de 7 Dias interativo — instala no celular",
+              "Atualizações grátis enquanto o produto existir",
             ]}
-            ctaLabel="Quero por R$ 9,90"
+            ctaLabel="Quero por R$ 17"
             ctaHref="https://pay.cakto.com.br/880634"
           />
 
@@ -215,17 +214,19 @@ function Products() {
             index={1}
             bgSrc="uploads/CAPA_LIVRO_PREMIUM.png"
             bgFallback="https://images.unsplash.com/photo-1565514020179-026b92b84bb6?auto=format&fit=crop&w=1400&q=80"
-            tags={["Mais escolhido", "2 livros + 4 bônus", "Dados 2026"]}
-            title="Kit Duplo"
-            price="R$ 18,90"
-            description="Popular + Edição Estratégica (8 capítulos com Selic, Desenrola e cálculos atualizados) + 4 bônus. Preço promocional de lançamento."
+            tags={["Mais escolhido", "4 apps inclusos", "Dados BACEN 2026"]}
+            title="Kit Completo"
+            price="R$ 67"
+            description="Tudo do Essencial + Edição Estratégica + 4 apps interativos + Hub Biblioteca + 7 PDFs originais. O ecossistema completo da virada."
             bullets={[
-              "Edição Popular completa",
-              "Edição Estratégica (8 capítulos atualizados 2026)",
-              "50 Ideias de Renda Extra",
-              "Scripts de negociação + Plano 7 dias + Checklist mensal",
+              "Tudo da Edição Essencial",
+              "Edição Estratégica (8 capítulos atualizados Selic 14,5%/Desenrola 2026)",
+              "60 Ideias de Renda Extra (10 atualizações 2026 inclusas)",
+              "Roteiro de Negociação com carta jurídica e calculadora de juros do BACEN",
+              "Checklist Mensal interativo com score 0-25",
+              "Hub Biblioteca: streak, banner de continuar, exportar tudo",
             ]}
-            ctaLabel="Quero o Kit por R$ 18,90"
+            ctaLabel="Quero o Kit por R$ 67"
             ctaHref="https://pay.cakto.com.br/880647"
             highlight
           />
@@ -233,19 +234,22 @@ function Products() {
           <ProductCard
             index={2}
             bgSrc="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80"
-            tags={["App móvel", "Web app", "Pré-lançamento"]}
+            tags={["App móvel", "Acesso vitalício", "Pré-lançamento"]}
             title="Virada App"
-            statusBadge="Em construção"
-            description="Controle financeiro no celular ou navegador. Em fase final de ajustes — quem comprou o e-book recebe acesso prioritário gratuito no lançamento."
+            price="R$ 197"
+            statusBadge="Lista de espera"
+            description="App completo de controle financeiro com dashboard, gastos, dívidas, metas e missões. Quem comprou o Kit tem upgrade preferencial por R$ 97."
             bullets={[
-              "Dashboard de gastos e receitas",
-              "Categorização e metas mensais",
-              "Funciona no celular e no PC",
+              "Dashboard com gastos, receitas e fluxo de caixa",
+              "Controle de dívidas com prioridade e negociação",
+              "Sistema de metas e missões financeiras gamificadas",
+              "Funciona no celular e no PC (PWA)",
+              "Acesso vitalício — sem mensalidade",
             ]}
-            ctaLabel="Ver prévia"
+            ctaLabel="Entrar na lista de espera"
             ctaHref="https://app.progetoprontoia.tech"
             ctaVariant="outline"
-            belowCta="Visão prévia — ainda em ajustes"
+            belowCta="Lançamento previsto: junho/2026 · upgrade R$ 97 pra quem tem o Kit"
           />
         </div>
 
