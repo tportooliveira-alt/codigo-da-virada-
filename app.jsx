@@ -5,6 +5,7 @@ function App() {
       <Quote />
       <Products />
       <Bonuses />
+      <ViradaApp />
       <Author />
       <FAQ />
       <Footer />
