@@ -29,7 +29,7 @@ function Autor() {
                     <span className="font-serif-i text-gold text-6xl leading-none">T</span>
                   </div>
                   <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/40">
-                    [ retrato · Thiago Cardoso ]
+                    [ retrato · Thiago Porto Oliveira ]
                   </div>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-white/50">
@@ -47,29 +47,30 @@ function Autor() {
             </Reveal>
             <Reveal delay={1}>
               <h2 className="h-display text-5xl md:text-7xl text-white mt-6 leading-[0.96]">
-                Thiago Cardoso.<br />
-                <span className="font-serif-i text-gold">11 anos</span> no Brasil financeiro.
+                Thiago Porto Oliveira.<br />
+                <span className="font-serif-i text-gold">Empreendedor</span> que viveu o problema.
               </h2>
             </Reveal>
             <Reveal delay={2}>
               <div className="mt-7 space-y-5 text-white/70 text-lg leading-relaxed max-w-2xl font-light">
                 <p>
-                  Engenheiro de software, 38 anos, ex-CLT que pagou R$ 18.700 em juros de cartão antes de
-                  entender como o sistema realmente funcionava. Hoje desenvolve produtos financeiros pra
-                  brasileiro que ganha bem e termina o mês no zero.
+                  Fundador do Código da Virada. Criador de produtos digitais que nasceu da observação
+                  de uma realidade brasileira: pessoas inteligentes e trabalhadoras que não conseguem
+                  sair do aperto financeiro — não por falta de esforço, mas por falta de método.
                 </p>
                 <p>
                   Não vendo enriquecimento. Vendo método. E garanto pelo único motivo que importa:
-                  o método foi escrito depois que funcionou pra mim — não antes.
+                  o método foi construído com base em pesquisa do BACEN, Harvard, Stanford, Serasa,
+                  SPC e McKinsey — não em opinião.
                 </p>
               </div>
             </Reveal>
 
             <Reveal delay={3}>
               <div className="mt-9 grid grid-cols-3 gap-3 max-w-xl">
-                <BioStat n="1.842" label="Compradores" />
-                <BioStat n="R$ 18,7k" label="Juros pagos antes do método" />
-                <BioStat n="4,9★" label="Avaliação Kiwify" />
+                <BioStat n="8" label="Instituições de pesquisa citadas" />
+                <BioStat n="14" label="Entregáveis no Kit" />
+                <BioStat n="30 dias" label="Garantia incondicional" />
               </div>
             </Reveal>
 

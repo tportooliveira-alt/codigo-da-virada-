@@ -4,20 +4,22 @@
 
 function KitInclusos() {
   const pdfs = [
-    { n: '01', title: 'Mapa de Juros do Cartão', pages: 14 },
-    { n: '02', title: 'Anatomia da Anuidade', pages: 11 },
-    { n: '03', title: 'Portabilidade Salário', pages: 9 },
-    { n: '04', title: 'Quitação por Negociação', pages: 16 },
-    { n: '05', title: 'O Método das 3 Contas', pages: 12 },
-    { n: '06', title: 'Investir com R$ 200', pages: 18 },
-    { n: '07', title: 'Plano 12 Meses', pages: 22 },
+    { n: '01', title: 'Código da Virada — Base', pages: 15 },
+    { n: '02', title: 'Código da Virada — Popular', pages: 17 },
+    { n: '03', title: 'Código da Virada — Estratégica', pages: 31 },
+    { n: '04', title: '60 Ideias de Renda Extra', pages: 12 },
+    { n: '05', title: 'Checklist Mensal', pages: 6 },
+    { n: '06', title: 'Plano de 7 Dias', pages: 8 },
+    { n: '07', title: 'Roteiro de Negociação', pages: 8 },
   ];
 
   const pwas = [
     { name: '60 Ideias de Renda Extra', sub: 'Quiz + filtros por capital', cover: 'assets/CAPA_BONUS_1_RENDA_EXTRA.jpg' },
-    { name: 'Roteiro de Negociação', sub: 'Scripts + carta jurídica CDC', cover: 'assets/CAPA_BONUS_2_NEGOCIACAO.jpg' },
-    { name: 'Plano de 7 Dias', sub: 'Jornada destrancável', cover: 'assets/CAPA_BONUS_3_PLANO_7DIAS.jpg' },
+    { name: 'Roteiro de Negociação', sub: '6 scripts + botão WhatsApp', cover: 'assets/CAPA_BONUS_2_NEGOCIACAO.jpg' },
+    { name: 'Plano de 7 Dias', sub: 'Jornada gamificada', cover: 'assets/CAPA_BONUS_3_PLANO_7DIAS.jpg' },
     { name: 'Checklist Mensal', sub: 'Score saúde financeira 0-25', cover: 'assets/CAPA_BONUS_4_CHECKLIST.jpg' },
+    { name: 'Ebook Web Interativo', sub: 'Livro navegável + anotações', cover: 'assets/CAPA_LIVRO_PREMIUM.jpg' },
+    { name: 'Hub Biblioteca', sub: 'Central que conecta tudo', cover: 'assets/CAPA_LIVRO_POPULAR.jpg' },
   ];
 
   return (
@@ -28,7 +30,7 @@ function KitInclusos() {
           kicker="// Tudo o que vem no Kit Completo (R$ 67)"
           title={
             <>
-              13 entregáveis.<br />
+              14 entregáveis.<br />
               <span className="font-serif-i text-gold">Um único pagamento</span>.
             </>
           }
@@ -40,7 +42,7 @@ function KitInclusos() {
         <Reveal>
           <div className="flex items-baseline justify-between mb-6">
             <h3 className="font-serif-i text-3xl text-white">7 PDFs aprofundados</h3>
-            <div className="text-[11px] font-mono uppercase tracking-widest text-white/40">→ 102 páginas no total</div>
+            <div className="text-[11px] font-mono uppercase tracking-widest text-white/40">→ 97 páginas no total</div>
           </div>
         </Reveal>
 
@@ -55,12 +57,12 @@ function KitInclusos() {
         {/* PWAs */}
         <Reveal>
           <div className="mt-24 flex items-baseline justify-between mb-6">
-            <h3 className="font-serif-i text-3xl text-white">4 PWAs offline</h3>
+            <h3 className="font-serif-i text-3xl text-white">6 mini-apps interativos (PWAs)</h3>
             <div className="text-[11px] font-mono uppercase tracking-widest text-white/40">→ Instala no celular sem app store</div>
           </div>
         </Reveal>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {pwas.map((p, i) => (
             <Reveal delay={Math.min(i + 1, 4)} key={i}>
               <PWACard name={p.name} sub={p.sub} cover={p.cover} index={i} />

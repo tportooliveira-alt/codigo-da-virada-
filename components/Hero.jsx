@@ -148,20 +148,14 @@ function Hero() {
 
             <Reveal delay={5}>
               <div className="mt-10 pt-6 border-t border-white/[0.08] flex items-center gap-4">
-                <div className="flex -space-x-2">
-                  {['#f0a830', '#d48a1f', '#b87014'].map((c, i) => (
-                    <div
-                      key={i}
-                      className="w-7 h-7 rounded-full border-2 border-[#0a0a0c]"
-                      style={{ background: `linear-gradient(135deg, ${c}, ${c}99)` }}
-                    />
-                  ))}
+                <div className="w-9 h-9 rounded-full border border-gold/40 bg-gold/15 flex items-center justify-center shrink-0">
+                  <Icon.Sparkle className="w-4 h-4 text-gold" />
                 </div>
                 <div className="text-sm">
                   <div className="text-white font-medium">
-                    +<CountUp to={1842} /> brasileiros já viraram
+                    Método com base em 8 instituições de pesquisa
                   </div>
-                  <div className="text-white/50 text-xs">Última compra: há 12 minutos · São Paulo</div>
+                  <div className="text-white/50 text-xs">BACEN · Harvard · Stanford · McKinsey · Serasa · SPC · Banco Mundial · Universidade de Michigan</div>
                 </div>
               </div>
             </Reveal>

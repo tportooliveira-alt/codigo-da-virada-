@@ -9,9 +9,9 @@ function Pricing() {
       tag: '00 · Chamariz',
       name: 'Segredo da Virada',
       forWho: 'Quero entender o método em 30 min',
-      price: '9',
+      price: '9,90',
       from: null,
-      cta: 'Quero o Segredo por R$ 9',
+      cta: 'Quero o Segredo por R$ 9,90',
       ctaTone: 'ghost',
       cover: 'assets/CAPA_LIVRO_POPULAR.jpg',
       includes: [
@@ -19,7 +19,7 @@ function Pricing() {
         'Leitura em 30 minutos',
         'Garantia de 30 dias',
       ],
-      missing: ['Plano 7 Dias', '7 PDFs avançados', '4 PWAs offline', 'Hub do método', 'Virada App'],
+      missing: ['Plano 7 Dias', '7 PDFs avançados', '6 PWAs offline', 'Hub do método', 'Virada App'],
       footnote: 'O custo de um café — para descobrir se o método é pra você',
     },
     {
@@ -36,7 +36,7 @@ function Pricing() {
         'Plano de 7 dias em PDF',
         'Garantia de 30 dias',
       ],
-      missing: ['7 PDFs avançados', '4 PWAs offline', 'Hub do método', 'Virada App'],
+      missing: ['7 PDFs avançados', '6 PWAs offline', 'Hub do método', 'Virada App'],
       footnote: 'Versão mínima para validar o método',
     },
     {
@@ -52,7 +52,7 @@ function Pricing() {
       includes: [
         'Tudo do Essencial',
         '+ 7 PDFs aprofundados',
-        '+ 4 PWAs offline (Juros, Gastos, Dívida, Plano)',
+        '+ 6 PWAs offline (Checklist, 60 Ideias, Negociação, 7 Dias, Ebook Web, Hub)',
         '+ Hub do método (web)',
         '+ Ebook em versão expandida',
       ],
@@ -93,7 +93,7 @@ function Pricing() {
               Quatro portas. <span className="font-serif-i text-gold">Mesmo método</span>.
             </>
           }
-          sub="Começa pelo Segredo a R$ 9, sobe pro Essencial quando quiser, e nunca paga duas vezes pela mesma coisa. Migração entre planos sempre desconta o que já pagou."
+          sub="Começa pelo Segredo a R$ 9,90, sobe pro Essencial quando quiser, e nunca paga duas vezes pela mesma coisa. Migração entre planos sempre desconta o que já pagou."
           className="mb-16 md:mb-20"
         />
 
@@ -207,7 +207,7 @@ function PriceCard({ tag, name, forWho, price, from, cta, ctaTone, featured, inc
         {price === '17' && (
           <div className="mt-2 text-[12.5px] text-white/45">à vista · acesso imediato</div>
         )}
-        {price === '9' && (
+        {price === '9,90' && (
           <div className="mt-2 text-[12.5px] text-white/45">à vista · entrega imediata por email</div>
         )}
       </div>

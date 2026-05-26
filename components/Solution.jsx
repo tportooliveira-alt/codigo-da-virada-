@@ -7,10 +7,10 @@ function Solution() {
     {
       tag: '01 · Método',
       title: 'O ebook que se lê em uma noite.',
-      sub: 'Sete capítulos acadêmicos. Linguagem clara. Sem promessa de enriquecer.',
+      sub: 'Oito capítulos com base em pesquisa. Linguagem clara. Sem promessa de enriquecer.',
       bullets: [
-        '21 páginas, capítulos de 6–8 min',
-        '7 técnicas testadas (BACEN, FGV, Stanford)',
+        '31 páginas, capítulos de 6–8 min',
+        'Referências BACEN, Harvard, Stanford e McKinsey',
         'Plano de 7 dias pra reorganizar a vida',
       ],
       icon: <Icon.Book className="w-5 h-5 text-gold" />,
@@ -18,13 +18,13 @@ function Solution() {
     },
     {
       tag: '02 · Ferramentas',
-      title: '4 mini-apps que rodam no celular.',
+      title: '6 mini-apps que rodam no celular.',
       sub: 'Sem cadastro. Sem login. Instala como app e funciona offline.',
       bullets: [
-        'Calculadora de juros do rotativo',
-        'Mapeador de gastos invisíveis',
-        'Simulador de quitação de dívida',
-        'Plano 30 dias com lembretes',
+        'Checklist mensal com score 0-25',
+        '60 ideias de renda extra com quiz',
+        'Roteiro de negociação + 6 scripts WhatsApp',
+        'Plano 7 dias gamificado + Ebook Web + Hub',
       ],
       icon: <Icon.Layers className="w-5 h-5 text-gold" />,
       visual: 'pwa',
@@ -120,19 +120,19 @@ function VisualForFrente({ kind }) {
         <div className="relative font-serif-i text-center leading-[0.9]">
           <div className="text-white/15 text-[68px] absolute -top-2 left-1/2 -translate-x-1/2 select-none">cap.</div>
           <div className="text-white text-5xl">01</div>
-          <div className="text-gold text-2xl mt-1 italic">→ 07</div>
+          <div className="text-gold text-2xl mt-1 italic">→ 08</div>
         </div>
         <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[9px] font-mono uppercase tracking-widest text-white/30">
-          <span>21 pp · pdf + web</span>
+          <span>31 pp · pdf + web</span>
           <span>v 2.0</span>
         </div>
       </div>
     );
   }
   if (kind === 'pwa') {
-    const apps = ['Juros', 'Gastos', 'Dívida', 'Plano'];
+    const apps = ['Check', '60 Ideias', 'Negoc.', 'Plano', 'Ebook', 'Hub'];
     return (
-      <div className="absolute inset-0 grid grid-cols-2 gap-2 p-4">
+      <div className="absolute inset-0 grid grid-cols-3 gap-1.5 p-3">
         {apps.map((a, i) => (
           <div
             key={i}
