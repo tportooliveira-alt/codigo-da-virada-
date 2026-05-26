@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<meta name="theme-color" content="#0a0a0c">
+<title>Minha Biblioteca — O Código da Virada</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Código da Virada">
+<style>
+  :root {
+    --bg: #0a0a0c; --surface: #16161a; --surface-2: #1f1f24;
+    --line: #2a2a30; --text: #f5f5f7; --text-soft: #b0b0b8;
+    --text-mute: #707078; --green: #1d9e75; --green-dark: #169068;
+    --green-soft: rgba(29, 158, 117, 0.12); --gold: #f0a830;
+    --gold-soft: rgba(240, 168, 48, 0.12); --blue: #4a90e2;
+    --red: #d65656; --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.55; -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  body { padding: 24px 16px 100px; max-width: 1100px; margin: 0 auto; }
+
+  header { padding: 12px 4px 28px; }
+  .brand-line { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--green); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  .brand-line .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  h1 { font-size: 36px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 12px; }
+  .subtitle { color: var(--text-soft); font-size: 16px; max-width: 600px; line-height: 1.5; }
+
+  .privacy-strip {
+    background: var(--green-soft); border: 1px solid var(--green);
+    border-radius: 11px; padding: 12px 14px; margin-top: 18px;
+    font-size: 13px; line-height: 1.5; color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .privacy-strip strong { color: var(--green); }
+
+  /* === BANNER CONTINUAR === */
+  .continue-banner {
+    background: linear-gradient(135deg, var(--green-soft) 0%, var(--surface) 100%);
+    border: 1px solid var(--green); border-radius: var(--radius);
+    padding: 16px 20px; margin-top: 18px;
+    display: none; align-items: center; gap: 14px; flex-wrap: wrap;
+    text-decoration: none; color: var(--text); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .continue-banner.show { display: flex; }
+  .continue-banner:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(29,158,117,0.2); }
+  .continue-banner .icon { font-size: 32px; flex-shrink: 0; }
+  .continue-banner .info { flex: 1; min-width: 200px; }
+  .continue-banner .label { font-size: 11px; color: var(--green); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+  .continue-banner .name { font-size: 16px; font-weight: 700; color: var(--text); }
+  .continue-banner .arrow { color: var(--green); font-size: 20px; font-weight: 700; }
+
+  /* === STATS ROW (3 cards lado a lado) === */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 24px 0 28px;
+  }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 16px 18px;
+  }
+  .stat-card .lbl { font-size: 11px; color: var(--text-mute); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-card .val { font-size: 24px; font-weight: 800; color: var(--green); letter-spacing: -0.02em; }
+  .stat-card .val .total { color: var(--text-mute); font-size: 16px; font-weight: 600; }
+  .stat-card .sub { font-size: 12px; color: var(--text-soft); margin-top: 6px; line-height: 1.4; }
+  .stat-card.streak .val { color: var(--gold); }
+  .stat-card.streak.zero .val { color: var(--text-mute); }
+  .stat-card.engagement .val { color: var(--blue); }
+  .progress-bar { height: 6px; background: var(--surface-2); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .progress-fill { height: 100%; background: var(--green); transition: width 0.5s; }
+
+  .section-title {
+    font-size: 13px; color: var(--text-mute); font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    margin: 32px 0 14px; padding: 0 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title .icon { font-size: 16px; }
+
+  /* === GRID DE LIVROS === */
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+  }
+  .book {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 14px; cursor: pointer;
+    transition: all 0.25s; text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+  .book:hover { border-color: var(--green); transform: translateY(-4px); box-shadow: 0 18px 40px rgba(0,0,0,0.5); }
+  .book-cover-wrap {
+    width: 100%; aspect-ratio: 3/4; border-radius: 10px; overflow: hidden;
+    margin-bottom: 12px; background: var(--surface-2); position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .book-cover-wrap img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.4s;
+  }
+  .book:hover .book-cover-wrap img { transform: scale(1.04); }
+  .book-order {
+    position: absolute; top: 8px; left: 8px;
+    background: rgba(0,0,0,0.85); color: white;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; padding: 4px 8px; border-radius: 6px;
+  }
+  .book-order.principal { background: var(--green); }
+  .book-order.bonus { background: var(--gold); color: var(--bg); }
+  .book-status {
+    position: absolute; top: 8px; right: 8px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--text-soft);
+  }
+  .book-status.done { background: var(--green); color: white; }
+  .book-status.progress { background: var(--gold); color: var(--bg); }
+  .book-badge-new {
+    position: absolute; bottom: 8px; right: 8px;
+    background: linear-gradient(135deg, var(--gold), #d48a1f);
+    color: #1a1109; font-size: 9px; font-weight: 800;
+    letter-spacing: 0.05em; padding: 3px 7px; border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(240,168,48,0.4);
+  }
+  .book-title { font-size: 15px; font-weight: 700; line-height: 1.25; margin-bottom: 4px; letter-spacing: -0.01em; }
+  .book-sub { font-size: 12px; color: var(--text-soft); line-height: 1.4; }
+  .book-meta {
+    display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+    font-size: 11px; color: var(--text-mute);
+  }
+  .book-meta .tag {
+    background: var(--surface-2); padding: 3px 8px; border-radius: 5px;
+  }
+  .book-meta .tag.time { color: var(--green); }
+
+  /* === PDFs GRID (mais compacto) === */
+  .pdfs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+  }
+  .pdf-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 11px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none; color: inherit; cursor: pointer;
+    transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+  }
+  .pdf-card:hover { border-color: var(--red); background: var(--surface-2); }
+  .pdf-icon {
+    width: 38px; height: 38px; border-radius: 9px;
+    background: rgba(214,86,86,0.15); color: var(--red);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 11px; flex-shrink: 0;
+  }
+  .pdf-info { flex: 1; min-width: 0; }
+  .pdf-name { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.3; }
+  .pdf-size { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+
+  /* === LIVRO PREMIUM CARD === */
+  .premium-card {
+    background: linear-gradient(135deg, rgba(240,168,48,0.1) 0%, var(--surface) 100%);
+    border: 1px solid var(--gold); border-radius: var(--radius);
+    padding: 20px; margin-top: 16px;
+    display: flex; gap: 18px; align-items: center; flex-wrap: wrap;
+  }
+  .premium-icon { font-size: 40px; flex-shrink: 0; }
+  .premium-info { flex: 1; min-width: 200px; }
+  .premium-info h3 { font-size: 18px; color: var(--gold); margin-bottom: 6px; letter-spacing: -0.01em; }
+  .premium-info p { font-size: 14px; color: var(--text-soft); line-height: 1.5; }
+  .premium-info .files { font-size: 12px; color: var(--text-mute); margin-top: 8px; }
+
+  /* === INSTALAR === */
+  .install-card {
+    background: linear-gradient(135deg, var(--green-soft) 0%, var(--surface) 100%);
+    border: 1px solid var(--green); border-radius: var(--radius);
+    padding: 20px; margin-top: 28px;
+    display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  }
+  .install-icon { font-size: 36px; flex-shrink: 0; }
+  .install-info { flex: 1; min-width: 200px; }
+  .install-info h3 { font-size: 16px; margin-bottom: 4px; color: var(--green); }
+  .install-info p { font-size: 13px; color: var(--text-soft); line-height: 1.5; }
+  .install-btn {
+    padding: 12px 24px; background: var(--green); color: white;
+    border: none; border-radius: 11px; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s; font-family: inherit;
+    display: none; align-items: center; gap: 8px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .install-btn.show { display: inline-flex; }
+  .install-btn:hover { background: var(--green-dark); }
+  .install-hint {
+    background: var(--surface-2); border-radius: 9px; padding: 10px 12px;
+    margin-top: 10px; font-size: 12px; color: var(--text-soft); line-height: 1.5;
+    display: none;
+  }
+  .install-hint.show { display: block; }
+  .install-hint strong { color: var(--text); }
+
+  /* === ACTIONS === */
+  .actions-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 18px;
+    margin-top: 20px;
+  }
+  .actions-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .action-btn {
+    padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; font-family: inherit;
+    background: var(--surface-2); border: 1px solid var(--line); color: var(--text);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    text-decoration: none;
+  }
+  .action-btn:hover { background: var(--line); border-color: var(--text-mute); }
+  .action-btn.whatsapp { background: #25D366; border-color: #25D366; color: white; }
+  .action-btn.whatsapp:hover { background: #1eaa56; }
+  .action-btn.danger { color: var(--red); }
+  .action-btn.danger:hover { background: rgba(214,86,86,0.1); border-color: var(--red); }
+
+  /* === MOBILE === */
+  @media (max-width: 480px) {
+    body { padding: 16px 12px 100px; }
+    h1 { font-size: 26px; }
+    .subtitle { font-size: 14px; }
+    .books-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .book { padding: 10px; }
+    .book-title { font-size: 13px; }
+    .book-sub { font-size: 11px; }
+    .stats-row { grid-template-columns: 1fr; }
+    .premium-card { padding: 16px; }
+    .premium-info h3 { font-size: 16px; }
+  }
+
+  .footer-note { text-align: center; padding: 32px 20px; color: var(--text-mute); font-size: 12px; border-top: 1px solid var(--line); margin-top: 40px; }
+  .footer-note a { color: var(--green); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-line"><span class="dot"></span> O Código da Virada</div>
+  <h1>Minha Biblioteca</h1>
+  <p class="subtitle">Olá! Aqui está todo o material da sua jornada. Toca em qualquer capa pra abrir em uma nova aba — o hub fica aqui te esperando.</p>
+  <div class="privacy-strip">
+    <span style="font-size:18px;">🔒</span>
+    <div><strong>100% no seu aparelho</strong> · Seu progresso, anotações e dados ficam só com você. Sem servidor, sem login, sem rastreamento.</div>
+  </div>
+</header>
+
+<!-- BANNER CONTINUAR -->
+<a id="continue-banner" class="continue-banner" target="_blank" rel="noopener">
+  <span class="icon">▶️</span>
+  <div class="info">
+    <div class="label">Continue de onde parou</div>
+    <div class="name" id="continue-name">—</div>
+  </div>
+  <span class="arrow">→</span>
+</a>
+
+<!-- STATS ROW -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="lbl">📊 Materiais usados</div>
+    <div class="val"><span id="progress-count">0</span><span class="total"> / 5</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+  <div class="stat-card engagement">
+    <div class="lbl">✍️ Sua atividade</div>
+    <div class="val" id="stat-actions">0</div>
+    <div class="sub" id="stat-actions-detail">passos + notas + revisões</div>
+  </div>
+  <div class="stat-card streak zero" id="streak-card">
+    <div class="lbl">🔥 Sequência</div>
+    <div class="val"><span id="streak-days">0</span><span class="total"> dias</span></div>
+    <div class="sub" id="streak-msg">Abra a biblioteca todo dia pra criar hábito</div>
+  </div>
+</div>
+
+<!-- LIVRO PRINCIPAL -->
+<div class="section-title"><span class="icon">📖</span> Comece por aqui</div>
+<div class="books-grid">
+  <a href="../11-Ebook-Web-Interativo/index.html" target="_blank" rel="noopener" class="book" data-mat="ebook">
+    <div class="book-cover-wrap">
+      <span class="book-order principal">1º Passo</span>
+      <span class="book-status" id="status-ebook">📖</span>
+      <img src="capas/ebook.jpg" alt="O Código da Virada Financeira">
+    </div>
+    <div class="book-title">O Código da Virada Financeira</div>
+    <div class="book-sub">7 capítulos · método completo de organização e renda</div>
+    <div class="book-meta">
+      <span class="tag time">⏱ 90 min</span>
+      <span class="tag">Leitura</span>
+    </div>
+  </a>
+</div>
+
+<!-- APLIQUE O MÉTODO -->
+<div class="section-title"><span class="icon">🎯</span> Aplique o método</div>
+<div class="books-grid">
+  <a href="../10-Plano-7-Dias-Interativo/index.html" target="_blank" rel="noopener" class="book" data-mat="b3">
+    <div class="book-cover-wrap">
+      <span class="book-order bonus">2º Passo</span>
+      <span class="book-status" id="status-b3">📖</span>
+      <img src="capas/bonus-3.jpg" alt="Plano de 7 Dias">
+    </div>
+    <div class="book-title">Plano de 7 Dias</div>
+    <div class="book-sub">Uma ação por dia · jornada com diário exportável</div>
+    <div class="book-meta">
+      <span class="tag time">⏱ 30-60 min/dia</span>
+      <span class="tag">7 dias</span>
+    </div>
+  </a>
+  <a href="../07-Checklist-Interativo/index.html" target="_blank" rel="noopener" class="book" data-mat="b4">
+    <div class="book-cover-wrap">
+      <span class="book-order bonus">3º Passo</span>
+      <span class="book-status" id="status-b4">📖</span>
+      <img src="capas/bonus-4.jpg" alt="Checklist Mensal">
+    </div>
+    <div class="book-title">Checklist Mensal</div>
+    <div class="book-sub">Revisão financeira mensal · score 0-25</div>
+    <div class="book-meta">
+      <span class="tag time">⏱ 30-45 min</span>
+      <span class="tag">Mensal</span>
+    </div>
+  </a>
+</div>
+
+<!-- BÔNUS QUANDO PRECISAR -->
+<div class="section-title"><span class="icon">🎁</span> Bônus — use quando precisar</div>
+<div class="books-grid">
+  <a href="../08-50-Ideias-Interativo/index.html" target="_blank" rel="noopener" class="book" data-mat="b1">
+    <div class="book-cover-wrap">
+      <span class="book-order bonus">Bônus</span>
+      <span class="book-status" id="status-b1">📖</span>
+      <span class="book-badge-new">+10 BÔNUS 2026</span>
+      <img src="capas/bonus-1.jpg" alt="50 Ideias de Renda Extra">
+    </div>
+    <div class="book-title">50 Ideias de Renda Extra</div>
+    <div class="book-sub">Quiz + filtros + 60 ideias atualizadas</div>
+    <div class="book-meta">
+      <span class="tag time">⏱ Quiz 3 min</span>
+      <span class="tag">Sob demanda</span>
+    </div>
+  </a>
+  <a href="../09-Negociacao-Dividas-Interativo/index.html" target="_blank" rel="noopener" class="book" data-mat="b2">
+    <div class="book-cover-wrap">
+      <span class="book-order bonus">Bônus</span>
+      <span class="book-status" id="status-b2">📖</span>
+      <img src="capas/bonus-2.jpg" alt="Roteiro de Negociação de Dívidas">
+    </div>
+    <div class="book-title">Roteiro de Negociação</div>
+    <div class="book-sub">Calculadora + Scripts + Carta jurídica</div>
+    <div class="book-meta">
+      <span class="tag time">⏱ 20-40 min</span>
+      <span class="tag">Por dívida</span>
+    </div>
+  </a>
+</div>
+
+<!-- LIVRO PREMIUM -->
+<div class="section-title"><span class="icon">📚</span> Livro Premium Novela <span style="color: var(--gold); font-size: 11px; margin-left: 4px;">EXTRA</span></div>
+<div class="premium-card">
+  <span class="premium-icon">📖</span>
+  <div class="premium-info">
+    <h3>O Código da Virada — Edição Novela (50 capítulos)</h3>
+    <p>A versão expandida em formato de narrativa. 5 volumes em Markdown editorial — leitura imersiva da jornada de Maria pela virada financeira.</p>
+    <div class="files">Arquivos em <code style="background: var(--surface-2); padding: 2px 6px; border-radius: 4px; font-family: monospace;">13-Livro-Premium-Novela/</code> — abre no Notion, Obsidian, VSCode ou qualquer editor de texto.</div>
+  </div>
+</div>
+
+<!-- PDFs ORIGINAIS -->
+<div class="section-title"><span class="icon">📄</span> Versões PDF (para baixar ou imprimir)</div>
+<div class="pdfs-grid">
+  <a href="../01-PDFs-PRONTOS/ebook-codigo-da-virada.pdf" target="_blank" rel="noopener" class="pdf-card">
+    <div class="pdf-icon">PDF</div>
+    <div class="pdf-info">
+      <div class="pdf-name">Livro completo (versão essencial)</div>
+      <div class="pdf-size">29 KB · 7 capítulos</div>
+    </div>
+  </a>
+  <a href="../01-PDFs-PRONTOS/ebook-popular-codigo-da-virada.pdf" target="_blank" rel="noopener" class="pdf-card">
+    <div class="pdf-icon">PDF</div>
+    <div class="pdf-info">
+      <div class="pdf-name">Livro popular (texto + ilustrações)</div>
+      <div class="pdf-size">34 KB</div>
+    </div>
+  </a>
+  <a href="../01-PDFs-PRONTOS/ebook-premium-codigo-da-virada.pdf" target="_blank" rel="noopener" class="pdf-card">
+    <div class="pdf-icon">PDF</div>
+    <div class="pdf-info">
+      <div class="pdf-name">Livro premium (versão estendida)</div>
+      <div class="pdf-size">65 KB</div>
+    </div>
+  </a>
+  <a href="../01-PDFs-PRONTOS/bonus-50-ideias.pdf" target="_blank" rel="noopener" class="pdf-card">
+    <div class="pdf-icon">PDF</div>
+    <div class="pdf-info">
+      <div class="pdf-name">Bônus — 50 Ideias de Renda Extra</div>
+      <div class="pdf-size">11 KB</div>
+    </div>
+  </a>
+  <a href="../01-PDFs-PRONTOS/roteiro-negociacao.pdf" target="_blank" rel="noopener" class="pdf-card">
+    <div class="pdf-icon">PDF</div>
+    <div class="pdf-info">
+      <div class="pdf-name">Bônus — Roteiro de Negociação</div>
+      <div class="pdf-size">15 KB</div>
+    </div>
+  </a>
+  <a href="../01-PDFs-PRONTOS/plano-7-dias.pdf" target="_blank" rel="noopener" class="pdf-card">
+    <div class="pdf-icon">PDF</div>
+    <div class="pdf-info">
+      <div class="pdf-name">Bônus — Plano de 7 Dias</div>
+      <div class="pdf-size">14 KB</div>
+    </div>
+  </a>
+  <a href="../01-PDFs-PRONTOS/checklist-mensal.pdf" target="_blank" rel="noopener" class="pdf-card">
+    <div class="pdf-icon">PDF</div>
+    <div class="pdf-info">
+      <div class="pdf-name">Bônus — Checklist Mensal</div>
+      <div class="pdf-size">11 KB</div>
+    </div>
+  </a>
+</div>
+
+<!-- INSTALAR PWA -->
+<div class="install-card">
+  <span class="install-icon">📲</span>
+  <div class="install-info">
+    <h3>Instale como app no seu celular</h3>
+    <p>Adiciona o ícone na tela inicial e abre sem precisar do navegador. Funciona offline depois de instalado.</p>
+    <button class="install-btn" id="install-btn">Adicionar à tela inicial</button>
+    <div class="install-hint" id="install-hint"></div>
+  </div>
+</div>
+
+<!-- AÇÕES GLOBAIS -->
+<div class="actions-card">
+  <div class="section-title" style="margin: 0 0 12px;">⚙️ Ações</div>
+  <div class="actions-grid">
+    <button class="action-btn" onclick="exportarTudo()">📥 Exportar backup</button>
+    <button class="action-btn whatsapp" onclick="compartilharWhatsApp()">💬 Compartilhar</button>
+    <button class="action-btn danger" onclick="resetarTudo()">🗑️ Resetar tudo</button>
+  </div>
+</div>
+
+<div class="footer-note">
+  <div style="color: var(--green); font-weight: 600; margin-bottom: 10px;">
+    🔒 Seus dados não saem do seu aparelho. Sem servidor, sem login, sem rastreamento.
+  </div>
+  <a href="https://codigodavirada.net.br" target="_blank">codigodavirada.net.br</a> · © 2026 Thiago Porto Oliveira
+</div>
+
+<script>
+const MATERIALS = [
+  { id: 'ebook', name: 'O Código da Virada Financeira', link: '../11-Ebook-Web-Interativo/index.html', key: 'virada-ebook-v1' },
+  { id: 'b1',    name: '50 Ideias de Renda Extra',     link: '../08-50-Ideias-Interativo/index.html',  key: 'virada-50-ideias-v1' },
+  { id: 'b2',    name: 'Roteiro de Negociação',        link: '../09-Negociacao-Dividas-Interativo/index.html', key: 'virada-negociacao-v1' },
+  { id: 'b3',    name: 'Plano de 7 Dias',              link: '../10-Plano-7-Dias-Interativo/index.html', key: 'virada-plano-7dias-v1' },
+  { id: 'b4',    name: 'Checklist Mensal',             link: '../07-Checklist-Interativo/index.html', key: null /* dinâmico */ },
+];
+
+// === CRITÉRIOS REAIS de "usado/em progresso/concluído" ===
+function getProgress(mat) {
+  // Retorna { used: bool, done: bool, actions: number, lastCap: number|null }
+  try {
+    if (mat.id === 'ebook') {
+      const raw = localStorage.getItem(mat.key);
+      if (!raw) return { used: false, done: false, actions: 0 };
+      const s = JSON.parse(raw);
+      const readCount = Object.values(s.read || {}).filter(v => v).length;
+      const noteCount = Object.values(s.notes || {}).filter(v => v && v.trim()).length;
+      return {
+        used: readCount > 0 || noteCount > 0 || (s.current && s.current > 0),
+        done: readCount === 7,
+        actions: readCount + noteCount,
+        lastCap: s.current || null
+      };
+    }
+    if (mat.id === 'b1') {
+      const raw = localStorage.getItem(mat.key);
+      if (!raw) return { used: false, done: false, actions: 0 };
+      const s = JSON.parse(raw);
+      const favCount = (s.favs || []).length;
+      const quizDone = !!(s.quiz && s.quiz.done);
+      return {
+        used: quizDone || favCount > 0,
+        done: quizDone && favCount >= 3,
+        actions: (quizDone ? 1 : 0) + favCount
+      };
+    }
+    if (mat.id === 'b2') {
+      const raw = localStorage.getItem(mat.key);
+      if (!raw) return { used: false, done: false, actions: 0 };
+      const s = JSON.parse(raw);
+      const hasData = !!(s.dados && s.dados.valor && parseFloat(s.dados.valor) > 0);
+      const checksDone = Object.values(s.checks || {}).filter(v => v).length;
+      return {
+        used: hasData || checksDone > 0,
+        done: hasData && checksDone >= 6,
+        actions: (hasData ? 1 : 0) + checksDone
+      };
+    }
+    if (mat.id === 'b3') {
+      const raw = localStorage.getItem(mat.key);
+      if (!raw) return { used: false, done: false, actions: 0 };
+      const s = JSON.parse(raw);
+      const daysDone = Object.values(s.completed || {}).filter(v => v).length;
+      const stepsCount = Object.values(s.steps || {}).reduce((acc, dayObj) =>
+        acc + Object.values(dayObj || {}).filter(v => v).length, 0);
+      const noteCount = Object.values(s.notes || {}).filter(v => v && v.trim()).length;
+      return {
+        used: daysDone > 0 || stepsCount > 0 || noteCount > 0,
+        done: daysDone === 7,
+        actions: stepsCount + noteCount + daysDone
+      };
+    }
+    if (mat.id === 'b4') {
+      // Checklist usa key dinâmica por mês: virada-checklist-YYYY-MM
+      let monthCount = 0;
+      let totalActions = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('virada-checklist-')) {
+          monthCount++;
+          try {
+            const s = JSON.parse(localStorage.getItem(k));
+            // Conta campos preenchidos como ação
+            totalActions += Object.values(s).filter(v => v && v !== '0' && v !== '').length;
+          } catch(e) {}
+        }
+      }
+      return {
+        used: monthCount > 0,
+        done: monthCount >= 3, // 3 meses ou mais = "habitualizado"
+        actions: totalActions
+      };
+    }
+  } catch(e) { console.warn('getProgress error:', e); }
+  return { used: false, done: false, actions: 0 };
+}
+
+function updateAll() {
+  let usedCount = 0;
+  let totalActions = 0;
+  let firstIncomplete = null;
+
+  MATERIALS.forEach(mat => {
+    const p = getProgress(mat);
+    if (p.used) usedCount++;
+    totalActions += p.actions;
+
+    const st = document.getElementById('status-' + mat.id);
+    if (st) {
+      st.classList.remove('done', 'progress');
+      if (p.done) { st.textContent = '✓'; st.classList.add('done'); }
+      else if (p.used) { st.textContent = '...'; st.classList.add('progress'); }
+      else { st.textContent = '📖'; }
+    }
+
+    // Primeiro material usado mas não concluído = candidato a "continuar"
+    if (p.used && !p.done && !firstIncomplete) {
+      firstIncomplete = { mat, progress: p };
+    }
+  });
+
+  // Atualiza progress
+  document.getElementById('progress-count').textContent = usedCount;
+  document.getElementById('progress-fill').style.width = (usedCount / MATERIALS.length * 100) + '%';
+
+  // Atualiza atividade
+  document.getElementById('stat-actions').textContent = totalActions;
+
+  // Atualiza banner "continuar"
+  const banner = document.getElementById('continue-banner');
+  if (firstIncomplete) {
+    const m = firstIncomplete.mat;
+    let extra = '';
+    if (m.id === 'ebook' && firstIncomplete.progress.lastCap) {
+      extra = ` — Capítulo ${firstIncomplete.progress.lastCap}`;
+    }
+    document.getElementById('continue-name').textContent = m.name + extra;
+    banner.href = m.link;
+    banner.classList.add('show');
+  } else {
+    banner.classList.remove('show');
+  }
+
+  // Atualiza streak
+  updateStreak();
+}
+
+// === STREAK (sequência de dias) ===
+function updateStreak() {
+  const STREAK_KEY = 'virada-hub-streak';
+  const todayStr = new Date().toISOString().slice(0, 10);
+  let streakData;
+  try {
+    streakData = JSON.parse(localStorage.getItem(STREAK_KEY) || 'null');
+  } catch(e) { streakData = null; }
+
+  if (!streakData) {
+    streakData = { lastDate: todayStr, count: 1 };
+  } else if (streakData.lastDate !== todayStr) {
+    // Calcula diferença em dias
+    const last = new Date(streakData.lastDate);
+    const today = new Date(todayStr);
+    const diffDays = Math.round((today - last) / 86400000);
+    if (diffDays === 1) streakData.count++;       // dia seguinte = streak continua
+    else if (diffDays > 1) streakData.count = 1;  // pulou = resetou
+    streakData.lastDate = todayStr;
+  }
+  localStorage.setItem(STREAK_KEY, JSON.stringify(streakData));
+
+  const card = document.getElementById('streak-card');
+  const days = document.getElementById('streak-days');
+  const msg = document.getElementById('streak-msg');
+  days.textContent = streakData.count;
+  card.classList.toggle('zero', streakData.count <= 1);
+
+  if (streakData.count === 1) msg.textContent = 'Continue amanhã pra criar sequência';
+  else if (streakData.count < 5) msg.textContent = 'Bom ritmo, mantenha!';
+  else if (streakData.count < 10) msg.textContent = 'Você tá em modo virada 🔥';
+  else if (streakData.count < 30) msg.textContent = 'Hábito instalado!';
+  else msg.textContent = 'Disciplina de elite — parabéns!';
+}
+
+// === EXPORTAR TUDO ===
+function exportarTudo() {
+  const backup = {
+    exportadoEm: new Date().toISOString(),
+    produto: 'O Código da Virada Financeira',
+    dados: {}
+  };
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('virada-') || k.startsWith('virada-checklist-'))) {
+      try { backup.dados[k] = JSON.parse(localStorage.getItem(k)); }
+      catch(e) { backup.dados[k] = localStorage.getItem(k); }
+    }
+  }
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `codigo-da-virada-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// === RESETAR TUDO ===
+function resetarTudo() {
+  const ok = confirm('Tem certeza? Isso vai apagar TODO o seu progresso de todos os bônus.\n\nDica: clique em "Exportar backup" antes de resetar, pra ter um arquivo de segurança.');
+  if (!ok) return;
+  const ok2 = confirm('Última confirmação: apagar tudo mesmo?');
+  if (!ok2) return;
+  const keysParaApagar = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('virada-') || k.startsWith('virada-checklist-'))) keysParaApagar.push(k);
+  }
+  keysParaApagar.forEach(k => localStorage.removeItem(k));
+  alert(`${keysParaApagar.length} itens apagados. A página vai recarregar.`);
+  location.reload();
+}
+
+// === COMPARTILHAR WHATSAPP ===
+function compartilharWhatsApp() {
+  const texto = `Comecei minha virada financeira hoje 💪\n\nTô usando o método "O Código da Virada" e curtindo demais — tem livro, plano de 7 dias e ferramentas pra renegociar dívida e gerar renda extra.\n\nConfere: https://codigodavirada.net.br`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(texto)}`, '_blank');
+}
+
+// === PWA INSTALL ===
+let deferredPrompt = null;
+const installBtn = document.getElementById('install-btn');
+const installHint = document.getElementById('install-hint');
+
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isAndroid = /Android/.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+function setHintFor(platform) {
+  if (platform === 'ios') {
+    installHint.innerHTML = '<strong>No iPhone/iPad:</strong> toca em "Compartilhar" (□↑) embaixo do Safari → rola e toca em <strong>"Adicionar à Tela de Início"</strong>.';
+  } else if (platform === 'android') {
+    installHint.innerHTML = '<strong>No Android:</strong> toca nos 3 pontinhos (⋮) do Chrome → <strong>"Instalar app"</strong> ou <strong>"Adicionar à tela inicial"</strong>.';
+  } else {
+    installHint.innerHTML = '<strong>No computador:</strong> Chrome / Edge mostram um ícone de "instalar" na barra de endereços (□↓), ou no menu (⋮) → <strong>"Instalar O Código da Virada"</strong>.';
+  }
+}
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.classList.add('show');
+});
+
+installBtn.addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBtn.classList.remove('show');
+  }
+});
+
+if (!isStandalone) {
+  if (isIOS) {
+    setHintFor('ios');
+    installHint.classList.add('show');
+  } else if (isAndroid) {
+    setHintFor('android');
+    // Em Android Chrome, aguarda 3s pelo prompt nativo. Se não vier, mostra hint manual
+    setTimeout(() => {
+      if (!installBtn.classList.contains('show')) installHint.classList.add('show');
+    }, 3000);
+  } else {
+    setHintFor('desktop');
+    setTimeout(() => {
+      if (!installBtn.classList.contains('show')) installHint.classList.add('show');
+    }, 3000);
+  }
+}
+
+// === ATUALIZAR AO VOLTAR PRA ABA ===
+window.addEventListener('focus', updateAll);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) updateAll();
+});
+
+updateAll();
+</script>
+
+</body>
+</html>

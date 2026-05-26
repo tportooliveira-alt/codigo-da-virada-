@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<meta name="theme-color" content="#0a0a0c">
+<title>O Código da Virada Financeira — Ebook Web</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Código da Virada">
+<style>
+  :root {
+    --bg: #0a0a0c; --surface: #16161a; --surface-2: #1f1f24;
+    --line: #2a2a30; --text: #f5f5f7; --text-soft: #b0b0b8;
+    --text-mute: #707078; --green: #1d9e75; --green-dark: #169068;
+    --green-soft: rgba(29, 158, 117, 0.12); --gold: #f0a830;
+    --red: #d65656; --blue: #4a90e2; --radius: 14px;
+    --reading: 17px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  body { padding: 0; max-width: 100%; margin: 0; }
+
+  /* === HEADER FIXO === */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,12,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line); padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .menu-btn {
+    background: var(--surface); border: 1px solid var(--line);
+    color: var(--text); width: 40px; height: 40px; border-radius: 10px;
+    font-size: 18px; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menu-btn:hover { background: var(--line); }
+  .topbar-title { flex: 1; font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.2; }
+  .topbar-title .small { font-size: 11px; color: var(--text-mute); display: block; }
+  .topbar-progress {
+    width: 100%; height: 3px; background: var(--surface-2);
+    position: absolute; bottom: -1px; left: 0;
+  }
+  .topbar-progress-fill { height: 100%; background: var(--green); transition: width 0.4s; }
+  .font-btn { background: var(--surface-2); border: 1px solid var(--line); color: var(--text); width: 36px; height: 36px; border-radius: 9px; font-size: 14px; font-weight: 600; cursor: pointer; }
+
+  /* === SIDEBAR === */
+  .sidebar {
+    position: fixed; top: 0; left: -100%; width: min(320px, 85vw);
+    height: 100vh; background: var(--surface); border-right: 1px solid var(--line);
+    z-index: 200; transition: left 0.3s ease;
+    overflow-y: auto; padding: 20px;
+  }
+  .sidebar.open { left: 0; }
+  .sidebar-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 150; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .sidebar-overlay.show { opacity: 1; pointer-events: auto; }
+  .sidebar h3 { font-size: 12px; color: var(--text-mute); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  .sidebar-close { float: right; background: transparent; border: none; color: var(--text); font-size: 22px; cursor: pointer; padding: 4px 8px; }
+
+  .toc-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 10px; cursor: pointer;
+    color: var(--text); font-size: 14px; line-height: 1.4;
+    margin-bottom: 4px; transition: all 0.15s; border: 1px solid transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .toc-item:hover { background: var(--surface-2); }
+  .toc-item.active { background: var(--green-soft); border-color: var(--green); }
+  .toc-item.read { color: var(--text-mute); }
+  .toc-num {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--surface-2); display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--text-soft); flex-shrink: 0;
+  }
+  .toc-item.read .toc-num { background: var(--green); color: white; }
+  .toc-item.active .toc-num { background: var(--green); color: white; }
+  .toc-title { flex: 1; min-width: 0; }
+  .toc-progress {
+    background: var(--surface-2); border-radius: 10px; padding: 14px;
+    margin-bottom: 20px;
+  }
+  .toc-progress .lbl { font-size: 12px; color: var(--text-mute); font-weight: 600; margin-bottom: 8px; }
+  .toc-progress .num { font-size: 22px; font-weight: 700; color: var(--green); }
+  .toc-progress .num .total { color: var(--text-mute); font-size: 16px; }
+  .toc-progress .bar { height: 6px; background: var(--surface); border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  .toc-progress .bar-fill { height: 100%; background: var(--green); transition: width 0.4s; }
+
+  /* === CONTEÚDO === */
+  .container { max-width: 700px; margin: 0 auto; padding: 32px 20px 80px; }
+  .privacy-strip {
+    background: var(--green-soft); border: 1px solid var(--green);
+    border-radius: 10px; padding: 10px 14px; margin-bottom: 24px;
+    font-size: 12px; line-height: 1.5; color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .privacy-strip strong { color: var(--green); }
+
+  .cover {
+    text-align: center; padding: 30px 0 30px;
+    border-bottom: 1px solid var(--line); margin-bottom: 32px;
+  }
+  .cover-image {
+    width: 100%; max-width: 260px; aspect-ratio: 3/4;
+    border-radius: 14px; margin: 0 auto 24px; display: block;
+    object-fit: cover; box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    border: 1px solid var(--line);
+  }
+  .cover .brand { font-size: 12px; color: var(--green); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+  .cover h1 { font-size: 32px; font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 12px; }
+  .cover .sub { font-size: 15px; color: var(--text-soft); max-width: 480px; margin: 0 auto; }
+  .cover .author { margin-top: 20px; font-size: 14px; color: var(--text-mute); }
+
+  .chapter {
+    display: none;
+  }
+  .chapter.active { display: block; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .chap-header { padding: 14px 0 28px; }
+  .chap-num { display: inline-block; font-size: 12px; color: var(--green); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+  .chap-title { font-size: 32px; font-weight: 700; line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 8px; }
+  .chap-sub { font-size: 16px; color: var(--text-soft); line-height: 1.5; font-style: italic; }
+
+  .chap-body { font-size: var(--reading); line-height: 1.75; color: var(--text); }
+  .chap-body p { margin-bottom: 20px; }
+  .chap-body h3 { font-size: 19px; font-weight: 600; margin: 32px 0 14px; color: var(--green); letter-spacing: -0.01em; }
+  .chap-body h4 { font-size: 16px; font-weight: 600; margin: 20px 0 10px; color: var(--gold); }
+  .chap-body strong { color: var(--text); font-weight: 700; }
+  .chap-body em { color: var(--green); font-style: normal; font-weight: 600; }
+  .chap-body ul, .chap-body ol { margin: 0 0 20px 20px; padding-left: 8px; }
+  .chap-body li { margin-bottom: 8px; }
+  .chap-body blockquote {
+    border-left: 3px solid var(--green); padding: 12px 18px;
+    margin: 24px 0; background: var(--green-soft);
+    border-radius: 0 10px 10px 0; font-style: italic; color: var(--text-soft);
+  }
+  .chap-body .destaque {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 10px; padding: 18px 20px; margin: 24px 0;
+  }
+  .chap-body .destaque strong { color: var(--green); }
+
+  /* === NOTAS === */
+  .note-section {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 18px; margin-top: 32px;
+  }
+  .note-section h4 { font-size: 14px; color: var(--text-mute); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px; }
+  .note-section textarea {
+    width: 100%; background: var(--surface-2); border: 1px solid var(--line);
+    color: var(--text); font-size: 15px; padding: 12px 14px;
+    border-radius: 10px; font-family: inherit; min-height: 90px;
+    line-height: 1.5; transition: border-color 0.15s;
+  }
+  .note-section textarea:focus { outline: none; border-color: var(--green); }
+
+  /* === NAVEGAÇÃO === */
+  .chap-nav {
+    display: flex; justify-content: space-between; gap: 12px;
+    margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .nav-btn {
+    flex: 1; padding: 14px; border-radius: 11px; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; font-family: inherit;
+    background: var(--surface); border: 1px solid var(--line); color: var(--text);
+    text-align: center; -webkit-tap-highlight-color: transparent;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .nav-btn:hover:not(:disabled) { background: var(--surface-2); }
+  .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .nav-btn.next { background: var(--green); border-color: var(--green); color: white; }
+  .nav-btn.next:hover:not(:disabled) { background: var(--green-dark); }
+  .mark-read {
+    width: 100%; margin-top: 12px; padding: 12px; border-radius: 11px;
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .mark-read.done { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+
+  /* === MOBILE === */
+  @media (min-width: 768px) {
+    .container { padding: 48px 32px 100px; }
+    :root { --reading: 18px; }
+  }
+  @media (max-width: 480px) {
+    .container { padding: 24px 16px 80px; }
+    .cover h1 { font-size: 28px; }
+    .chap-title { font-size: 24px; }
+    :root { --reading: 16px; }
+    .chap-body p { margin-bottom: 18px; }
+  }
+
+  .footer-note {
+    text-align: center; padding: 32px 20px; color: var(--text-mute); font-size: 12px;
+    border-top: 1px solid var(--line); margin-top: 32px;
+  }
+  .footer-note a { color: var(--green); text-decoration: none; }
+  .save-indicator { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--green); color: white; padding: 10px 20px; border-radius: 999px; font-size: 13px; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 1000; }
+  .save-indicator.show { opacity: 1; }
+
+  @media print {
+    .topbar, .sidebar, .sidebar-overlay, .chap-nav, .mark-read, .save-indicator { display: none !important; }
+    .chapter { display: block !important; page-break-after: always; }
+    body { background: white; color: black; }
+    .chap-body, .chap-title, .chap-sub, .cover h1, .cover .sub { color: black; }
+    .chap-body blockquote { background: #f0f0f0; color: black; }
+    .destaque, .note-section { background: white; border: 1px solid #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="menu-btn" id="menu-btn" aria-label="Sumário">☰</button>
+  <div class="topbar-title">
+    <span id="topbar-cap">Capa</span>
+    <span class="small">O Código da Virada Financeira</span>
+  </div>
+  <button class="font-btn" onclick="adjustFont(-1)" aria-label="Diminuir fonte">A−</button>
+  <button class="font-btn" onclick="adjustFont(1)" aria-label="Aumentar fonte">A+</button>
+  <div class="topbar-progress"><div class="topbar-progress-fill" id="topbar-fill"></div></div>
+</div>
+
+<div class="sidebar-overlay" id="overlay"></div>
+<aside class="sidebar" id="sidebar">
+  <button class="sidebar-close" id="sidebar-close">×</button>
+  <h3>📚 Sumário</h3>
+  <div class="toc-progress">
+    <div class="lbl">Seu progresso</div>
+    <div class="num"><span id="read-count">0</span><span class="total"> / 7 capítulos</span></div>
+    <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
+  </div>
+  <div id="toc"></div>
+</aside>
+
+<div class="container">
+
+  <!-- ════════ CAPA ════════ -->
+  <div class="chapter active" id="chap-0">
+    <div class="privacy-strip">
+      <span style="font-size:18px;">🔒</span>
+      <div><strong>100% no seu aparelho</strong> · Sua leitura, marcações e notas ficam só com você. Sem servidor, sem login, sem rastreamento.</div>
+    </div>
+    <div class="cover">
+      <img src="capa.jpg" alt="Capa do livro O Código da Virada Financeira" class="cover-image">
+      <div class="brand">● Educação Financeira Honesta</div>
+      <h1>O Código da Virada Financeira</h1>
+      <p class="sub">Como organizar seu dinheiro, sair do aperto e criar renda extra começando do zero.</p>
+      <div class="author">por Thiago Porto Oliveira</div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid var(--gold);border-radius:11px;padding:16px;margin-bottom:24px;">
+      <strong style="color:var(--gold);">⚠️ Aviso importante</strong>
+      <p style="margin-top:8px;font-size:14px;color:var(--text-soft);line-height:1.6;">
+        Este material é informativo e educacional. Não é consultoria financeira personalizada, recomendação de investimento ou garantia de resultado. A virada financeira não é mágica. É método somado a disciplina. Este livro te entrega o método. A disciplina é com você.
+      </p>
+    </div>
+
+    <h3 style="font-size:20px;margin:32px 0 12px;">Introdução</h3>
+    <p style="font-size:16px;line-height:1.7;color:var(--text);margin-bottom:14px;">Se você está lendo isso, é porque algo dentro de você sabe que algo precisa mudar.</p>
+    <p style="font-size:16px;line-height:1.7;color:var(--text-soft);margin-bottom:14px;">Talvez você ganhe pouco. Talvez ganhe bem e mesmo assim o dinheiro suma. Talvez tenha vergonha de abrir o aplicativo do banco. Talvez sinta que trabalha muito e não tem nada pra mostrar.</p>
+    <p style="font-size:16px;line-height:1.7;color:var(--text-soft);margin-bottom:14px;">Eu vou te dizer uma coisa logo de cara: <strong style="color:var(--text);">a culpa não é toda sua</strong>. A escola não te ensinou educação financeira. Sua família talvez também não soubesse. O sistema é desenhado pra que você pague juros, e não pra que você os receba.</p>
+    <p style="font-size:16px;line-height:1.7;color:var(--text-soft);margin-bottom:24px;">Mas tem uma boa notícia: <em style="color:var(--green);font-style:normal;font-weight:600;">as regras existem, e quem aprende a jogar pelas regras certas, vence</em>. Este livro tem 7 capítulos curtos. Cada um resolve uma parte do problema. Em uma semana você vai ter feito mais pela sua vida financeira do que muita gente faz em uma década.</p>
+
+    <button class="nav-btn next" onclick="goTo(1)">Começar o Capítulo 1 →</button>
+  </div>
+
+  <!-- ════════ CAPÍTULO 1 ════════ -->
+  <div class="chapter" id="chap-1">
+    <div class="chap-header">
+      <div class="chap-num">Capítulo 1</div>
+      <h2 class="chap-title">Clareza</h2>
+      <p class="chap-sub">Para onde seu dinheiro está indo?</p>
+    </div>
+    <div class="chap-body">
+      <p>A maioria das pessoas não sabe quanto gasta. Não por preguiça — por proteção emocional. <strong>Olhar dói. Mas evitar dói mais.</strong></p>
+      <p>Você não consegue mudar o que não enxerga. Por isso o primeiro passo é simples e desconfortável: olhar.</p>
+
+      <h3>O Inventário em 4 Quadrantes</h3>
+      <p>Pegue uma folha. Divida em quatro:</p>
+      <ul>
+        <li><strong>1. O QUE EU TENHO</strong> — Dinheiro em conta, poupança, investimentos, dinheiro em espécie.</li>
+        <li><strong>2. O QUE EU DEVO</strong> — Cada dívida com valor total, taxa de juros e parcela mensal. Cartão por cartão.</li>
+        <li><strong>3. QUANTO ENTRA</strong> — Salário líquido, bicos, aluguéis recebidos, pensões.</li>
+        <li><strong>4. QUANTO SAI</strong> — Em três grupos: fixas obrigatórias (aluguel, mercado, luz, água, internet, transporte), variáveis necessárias (gás, gasolina, remédios), variáveis ajustáveis (streaming, delivery, lazer, presentes).</li>
+      </ul>
+
+      <h3>Calcule o seu número mágico</h3>
+      <p>Receitas − Despesas = Sobra (ou Falta) Mensal</p>
+      <p>Se for negativo, você está afundando todo mês. Se for positivo mas pequeno, está sobrevivendo. <em>Se for maior que 20% da renda, você tem base.</em></p>
+
+      <h3>Os três tipos de dívida</h3>
+      <ul>
+        <li><strong>Tóxicas</strong> (juros acima de 5% ao mês): cartão rotativo, cheque especial, agiotagem. <em>Prioridade absoluta</em>.</li>
+        <li><strong>Médias</strong> (1,5% a 5%): empréstimo pessoal, financiamento de carro.</li>
+        <li><strong>Saudáveis</strong> (abaixo de 1%): financiamento imobiliário próprio, crédito subsidiado.</li>
+      </ul>
+
+      <div class="destaque">
+        <strong>Exercício do capítulo:</strong>
+        <ol style="margin-top:8px;">
+          <li>Faça o inventário em 4 quadrantes em papel ou planilha.</li>
+          <li>Some todas as dívidas e classifique cada uma.</li>
+          <li>Calcule sua sobra (ou falta) mensal.</li>
+          <li>Escreva em uma frase: "minha situação financeira hoje é ___."</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="note-section">
+      <h4>📝 Suas notas pessoais deste capítulo</h4>
+      <textarea data-note="1" placeholder="Escreva suas reflexões, números, descobertas..."></textarea>
+    </div>
+
+    <button class="mark-read" data-mark="1">✓ Marcar como lido</button>
+    <div class="chap-nav">
+      <button class="nav-btn" onclick="goTo(0)">← Capa</button>
+      <button class="nav-btn next" onclick="goTo(2)">Capítulo 2 →</button>
+    </div>
+  </div>
+
+  <!-- ════════ CAPÍTULO 2 ════════ -->
+  <div class="chapter" id="chap-2">
+    <div class="chap-header">
+      <div class="chap-num">Capítulo 2</div>
+      <h2 class="chap-title">Organização</h2>
+      <p class="chap-sub">Colocando as contas em ordem.</p>
+    </div>
+    <div class="chap-body">
+      <p>Quem não tem método trabalha contra si mesmo. Vamos criar um sistema simples.</p>
+
+      <h3>O calendário financeiro de uma página</h3>
+      <p>Pegue uma folha ou abra a agenda do celular. Marque:</p>
+      <ul>
+        <li>Dia 1 a 5: data de salário/principais entradas</li>
+        <li>Dia 5 a 10: pagamento das contas fixas (aluguel, condomínio, luz, água, internet)</li>
+        <li>Dia 10 a 20: dia de mercado da quinzena</li>
+        <li>Dia 20 a 25: revisão da fatura do cartão antes do fechamento</li>
+        <li>Último dia útil: revisão da semana e transferência para reserva</li>
+      </ul>
+      <blockquote>Quando tudo tem dia certo, nada vence em atraso.</blockquote>
+
+      <h3>A regra dos três bolsos</h3>
+      <p>Divida sua renda em três contas (mesmo banco, contas separadas, ou usando "cofrinhos"):</p>
+      <ul>
+        <li><strong>Bolso 1 — Contas obrigatórias (50%):</strong> aluguel, mercado, luz, água, internet, transporte</li>
+        <li><strong>Bolso 2 — Dívidas e reserva (30%):</strong> pagamento de dívidas + reserva (na fase de virada, vai a 40%)</li>
+        <li><strong>Bolso 3 — Vida (20%):</strong> lazer, comer fora, roupas, hobbies (na fase de virada, vai a 10%)</li>
+      </ul>
+
+      <h3>Função para cada parte do dinheiro</h3>
+      <p>Quando o salário cai, automatize: 50% pra conta de contas, 30% pra conta de dívidas/reserva, 20% pra conta do dia a dia.</p>
+      <p><em>O que não tem função, vira gasto invisível.</em></p>
+
+      <div class="destaque">
+        <strong>Exercício do capítulo:</strong>
+        <ol style="margin-top:8px;">
+          <li>Monte seu calendário financeiro em uma página.</li>
+          <li>Decida com quais contas você vai operar os três bolsos.</li>
+          <li>Configure pelo menos uma transferência automática no dia do salário.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="note-section">
+      <h4>📝 Suas notas pessoais deste capítulo</h4>
+      <textarea data-note="2" placeholder="Escreva suas reflexões, números, descobertas..."></textarea>
+    </div>
+
+    <button class="mark-read" data-mark="2">✓ Marcar como lido</button>
+    <div class="chap-nav">
+      <button class="nav-btn" onclick="goTo(1)">← Capítulo 1</button>
+      <button class="nav-btn next" onclick="goTo(3)">Capítulo 3 →</button>
+    </div>
+  </div>
+
+  <!-- ════════ CAPÍTULO 3 ════════ -->
+  <div class="chapter" id="chap-3">
+    <div class="chap-header">
+      <div class="chap-num">Capítulo 3</div>
+      <h2 class="chap-title">Plano de ataque</h2>
+      <p class="chap-sub">Dívidas, juros e desperdícios.</p>
+    </div>
+    <div class="chap-body">
+      <p>Toda dívida é matemática. <strong>Não é castigo, não é destino.</strong> É um número que pode ser quebrado.</p>
+
+      <h3>Avalanche ou Bola de Neve?</h3>
+      <ul>
+        <li><strong>Avalanche</strong> — começa pela maior taxa de juros. Mais barato no total.</li>
+        <li><strong>Bola de Neve</strong> — começa pelo menor valor. Mais motivador, vitórias rápidas.</li>
+      </ul>
+      <p><em>Não existe certo ou errado. O errado é não escolher nenhum dos dois.</em></p>
+
+      <h3>Como negociar dívidas</h3>
+      <p>Os bancos preferem receber 30% agora a 100% nunca. Existe espaço de negociação que ninguém te conta.</p>
+      <ol>
+        <li>Antes de ligar, separe quanto você pode pagar à vista.</li>
+        <li>Liste as dívidas em ordem de prioridade.</li>
+        <li>Ligue calmo, sem pressa, no início do mês (operadores têm metas).</li>
+        <li>Peça desconto MAIOR do que você espera receber.</li>
+        <li>Nunca aceite a primeira oferta. Diga que vai pensar.</li>
+        <li>Pague à vista sempre que possível — descontos são muito maiores.</li>
+        <li>Exija carta de quitação por escrito após pagar.</li>
+      </ol>
+      <blockquote>Mais detalhes no bônus "Roteiro para Negociar Dívidas".</blockquote>
+      <div style="background: rgba(74,144,226,0.1); border: 1px solid var(--blue); border-radius: 10px; padding: 14px 16px; margin: 18px 0; font-size: 14px; line-height: 1.5; display: flex; gap: 10px; align-items: flex-start;">
+        <span style="font-size: 18px;">💡</span>
+        <div>
+          O bônus interativo <strong>Roteiro de Negociação de Dívidas</strong> gera a carta jurídica completa, scripts personalizados e calcula a faixa realista de desconto pra cada dívida.
+          <br><a href="../09-Negociacao-Dividas-Interativo/index.html" target="_blank" style="display: inline-block; margin-top: 8px; padding: 8px 14px; background: var(--blue); color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Abrir o Roteiro agora →</a>
+        </div>
+      </div>
+
+      <h3>Cortando desperdícios sem cortar dignidade</h3>
+      <p>A regra é simples: corte os grandes ralos primeiro. Os 7 grandes ralos do brasileiro médio:</p>
+      <ol>
+        <li>Juros pagos a bancos</li>
+        <li>Carro (combustível, parcela, manutenção, IPVA)</li>
+        <li>Mercado mal feito (impulso, marca cara, desperdício)</li>
+        <li>Energia elétrica não otimizada</li>
+        <li>Assinaturas zumbis (Netflix, Spotify, apps que você nem usa)</li>
+        <li>Delivery</li>
+        <li>Compras por impulso</li>
+      </ol>
+
+      <h3>A regra das 72 horas</h3>
+      <p>Para qualquer compra acima de R$ 200 que não esteja na sua lista, <strong>espere 72 horas</strong>. 73% das vontades passam.</p>
+
+      <div class="destaque">
+        <strong>Exercício do capítulo:</strong>
+        <ol style="margin-top:8px;">
+          <li>Escolha sua estratégia: avalanche ou bola de neve.</li>
+          <li>Cancele todas as assinaturas que você não usou nas últimas 4 semanas.</li>
+          <li>Ligue para pelo menos UMA dívida e pergunte qual o melhor desconto possível à vista.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="note-section">
+      <h4>📝 Suas notas pessoais deste capítulo</h4>
+      <textarea data-note="3" placeholder="Escreva suas reflexões, números, descobertas..."></textarea>
+    </div>
+
+    <button class="mark-read" data-mark="3">✓ Marcar como lido</button>
+    <div class="chap-nav">
+      <button class="nav-btn" onclick="goTo(2)">← Capítulo 2</button>
+      <button class="nav-btn next" onclick="goTo(4)">Capítulo 4 →</button>
+    </div>
+  </div>
+
+  <!-- ════════ CAPÍTULO 4 ════════ -->
+  <div class="chapter" id="chap-4">
+    <div class="chap-header">
+      <div class="chap-num">Capítulo 4</div>
+      <h2 class="chap-title">Renda extra</h2>
+      <p class="chap-sub">Ideias reais para começar do zero.</p>
+    </div>
+    <div class="chap-body">
+      <p>Cortar gasto tem teto. <strong>Aumentar renda não tem.</strong></p>
+
+      <h3>Três horizontes de renda</h3>
+      <h4>Resultado em 7 dias (precisa de dinheiro AGORA):</h4>
+      <ul>
+        <li>Desapego: venda eletrônicos, roupas, móveis, livros parados em casa.</li>
+        <li>Plataformas: Uber, iFood, GetNinjas, faxina, jardinagem.</li>
+        <li>Serviços no bairro: passar cachorro, cuidar de criança/idoso, pequenos consertos.</li>
+      </ul>
+      <h4>Resultado em 30 dias (estabilidade):</h4>
+      <ul>
+        <li>Freelance digital: design (Canva), redação, edição de vídeo (CapCut), aulas online, tradução.</li>
+        <li>Revenda inteligente: roupas em atacado, cosméticos, importados.</li>
+        <li>Conteúdo digital: páginas no Instagram/TikTok sem aparecer.</li>
+      </ul>
+      <h4>Resultado em 90 dias (escala):</h4>
+      <ul>
+        <li>Especialização vendável: o que você sabe fazer melhor que a maioria? Vira curso, mentoria, consultoria.</li>
+        <li>Pequeno negócio local validado: pré-venda antes de qualquer investimento.</li>
+      </ul>
+
+      <h3>A regra de ouro da renda extra na virada</h3>
+      <p>Toda renda extra dos próximos 6 a 12 meses vai assim:</p>
+      <ul>
+        <li><strong>70%</strong> → quitar dívidas tóxicas</li>
+        <li><strong>20%</strong> → reserva</li>
+        <li><strong>10%</strong> → você (combustível emocional)</li>
+      </ul>
+      <p><em>Sem desvio.</em></p>
+
+      <div class="destaque">
+        <strong>Exercício do capítulo:</strong>
+        <ol style="margin-top:8px;">
+          <li>Liste 5 itens parados em casa que você pode vender essa semana.</li>
+          <li>Escolha UM caminho de renda extra (7, 30 ou 90 dias).</li>
+          <li>Defina quanto você quer gerar de renda extra nos próximos 30 dias.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="note-section">
+      <h4>📝 Suas notas pessoais deste capítulo</h4>
+      <textarea data-note="4" placeholder="Escreva suas reflexões, números, descobertas..."></textarea>
+    </div>
+
+    <button class="mark-read" data-mark="4">✓ Marcar como lido</button>
+    <div class="chap-nav">
+      <button class="nav-btn" onclick="goTo(3)">← Capítulo 3</button>
+      <button class="nav-btn next" onclick="goTo(5)">Capítulo 5 →</button>
+    </div>
+  </div>
+
+  <!-- ════════ CAPÍTULO 5 ════════ -->
+  <div class="chapter" id="chap-5">
+    <div class="chap-header">
+      <div class="chap-num">Capítulo 5</div>
+      <h2 class="chap-title">A reserva de paz</h2>
+      <p class="chap-sub">O escudo que muda tudo.</p>
+    </div>
+    <div class="chap-body">
+      <p>Antes de investir, antes de qualquer coisa: <strong>reserva</strong>.</p>
+      <p>Sem reserva, qualquer emergência te joga de volta no cartão de crédito. O ciclo recomeça. <em>Reserva quebra o ciclo.</em></p>
+
+      <h3>Quanto guardar?</h3>
+      <ul>
+        <li>CLT, sem dependentes: 3 meses de despesas</li>
+        <li>CLT com filhos: 6 meses</li>
+        <li>Autônomo, MEI, freelancer: 9 a 12 meses</li>
+        <li>Setor instável (turismo, eventos): 12 meses</li>
+      </ul>
+
+      <h3>Onde guardar?</h3>
+      <p>Liquidez diária + segurança + render acima da poupança.</p>
+      <ul>
+        <li><strong>Tesouro Selic</strong> — o mais recomendado. Investimento mínimo a partir de R$ 30 em 2026, acessível por qualquer corretora. Rende perto da Selic (14,5% a.a. em 2026), com liquidez diária.</li>
+        <li><strong>CDB de liquidez diária com 100% do CDI</strong> — em bancos digitais (Inter, C6, BTG Pactual, Picpay Invest).</li>
+        <li><strong>Conta remunerada automática</strong> — Nubank, Inter, PicPay, C6 (rendem perto de 100% do CDI sem você fazer nada).</li>
+      </ul>
+      <p><strong>Fuja:</strong> poupança, fundos com taxa alta, criptomoedas, ações (não combinam com reserva).</p>
+
+      <h3>O efeito psicológico</h3>
+      <p>Quando você tem reserva:</p>
+      <ul>
+        <li>Dorme melhor</li>
+        <li>Para de aceitar humilhação no trabalho</li>
+        <li>Negocia melhor com bancos e vendedores</li>
+        <li>Para de comprar por impulso (a ansiedade diminui)</li>
+      </ul>
+      <blockquote>Reserva é liberdade comprada antecipadamente.</blockquote>
+
+      <div class="destaque">
+        <strong>Exercício do capítulo:</strong>
+        <ol style="margin-top:8px;">
+          <li>Calcule sua reserva alvo.</li>
+          <li>Abra conta numa corretora gratuita: NuInvest (Nubank), Inter, Picpay Invest, XP, Toro, BTG ou C6 Bank.</li>
+          <li>Configure transferência automática mensal de qualquer valor — mesmo que seja R$ 50. <em>O hábito importa mais que a quantia.</em></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="note-section">
+      <h4>📝 Suas notas pessoais deste capítulo</h4>
+      <textarea data-note="5" placeholder="Escreva suas reflexões, números, descobertas..."></textarea>
+    </div>
+
+    <button class="mark-read" data-mark="5">✓ Marcar como lido</button>
+    <div class="chap-nav">
+      <button class="nav-btn" onclick="goTo(4)">← Capítulo 4</button>
+      <button class="nav-btn next" onclick="goTo(6)">Capítulo 6 →</button>
+    </div>
+  </div>
+
+  <!-- ════════ CAPÍTULO 6 ════════ -->
+  <div class="chapter" id="chap-6">
+    <div class="chap-header">
+      <div class="chap-num">Capítulo 6</div>
+      <h2 class="chap-title">Direção</h2>
+      <p class="chap-sub">Construindo uma vida financeira mais segura.</p>
+    </div>
+    <div class="chap-body">
+      <p>Saiu do vermelho. Tem reserva. <strong>E agora?</strong></p>
+      <p>Agora você começa a construir.</p>
+
+      <h3>O poder dos juros compostos</h3>
+      <p>R$ 300 por mês a 10% ao ano por 30 anos = <strong>mais de R$ 670 mil</strong>.</p>
+      <p>Começar cedo importa mais que aportar muito. Mas se você está começando "tarde", começar HOJE importa mais que perfeição.</p>
+
+      <h3>Os 3 primeiros tipos de investimento (em ordem)</h3>
+      <ol>
+        <li><strong>Renda fixa conservadora:</strong> Tesouro IPCA+, CDBs de bancos médios (até R$ 250 mil são cobertos pelo FGC), LCIs e LCAs (isentas de IR, mas têm carência). Importante: renda fixa tem tabela regressiva de IR (22,5% até 180 dias → 15% após 720 dias).</li>
+        <li><strong>Fundos imobiliários (FIIs):</strong> pagam dividendos mensais isentos de IR. Comece com fundos de tijolo ou recebíveis bem diversificados — pesquise no canal "Suno Notícias" ou "Clube FII" os mais populares e analise patrimônio, dividend yield e gestão antes de comprar.</li>
+        <li><strong>Ações de empresas sólidas / ETF:</strong> para dinheiro que pode ficar 5+ anos. ETFs de índice (que replicam o IBOVESPA, S&P 500 ou MSCI World) são o caminho mais simples e diversificado para iniciantes.</li>
+      </ol>
+      <div style="background: rgba(240,168,48,0.1); border: 1px solid var(--gold); border-radius: 10px; padding: 14px; margin: 18px 0; font-size: 14px; line-height: 1.55;">
+        <strong style="color: var(--gold);">⚖️ Aviso legal importante.</strong> Este capítulo é educacional, não constitui recomendação de investimento (CVM Resolução 178/2023). Antes de investir em qualquer produto, leia o material informativo, considere seu perfil de investidor (faça o teste de suitability na sua corretora) e, em caso de dúvida, consulte um assessor de investimentos certificado pela ANCORD.
+      </div>
+
+      <h3>Quanto preciso para viver de renda passiva?</h3>
+      <p>Renda mensal desejada × 200 = patrimônio alvo.</p>
+      <p>Quer R$ 5 mil/mês? Precisa de R$ 1 milhão investido a 0,5% ao mês.</p>
+      <p>Parece muito? Veja:</p>
+      <ul>
+        <li>R$ 500/mês a 10%/ano por 30 anos = R$ 1,13 milhão.</li>
+        <li>R$ 1.000/mês a 10%/ano por 25 anos = R$ 1,33 milhão.</li>
+      </ul>
+
+      <h3>Os 7 pecados do investidor iniciante</h3>
+      <ol>
+        <li>Investir o que não pode perder.</li>
+        <li>Seguir dicas de WhatsApp.</li>
+        <li>Tentar ficar rico rápido (cripto, day trade, opções).</li>
+        <li>Fundos com taxa acima de 1,5% ao ano.</li>
+        <li>Previdência privada com taxa de carregamento.</li>
+        <li>Imóvel de aluguel como primeiro investimento.</li>
+        <li>Parar de aportar quando o mercado cai.</li>
+      </ol>
+
+      <div class="destaque">
+        <strong>Exercício do capítulo:</strong>
+        <ol style="margin-top:8px;">
+          <li>Defina seu objetivo de longo prazo em uma frase.</li>
+          <li>Faça o primeiro aporte, mesmo que pequeno.</li>
+          <li>Configure aporte automático mensal.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="note-section">
+      <h4>📝 Suas notas pessoais deste capítulo</h4>
+      <textarea data-note="6" placeholder="Escreva suas reflexões, números, descobertas..."></textarea>
+    </div>
+
+    <button class="mark-read" data-mark="6">✓ Marcar como lido</button>
+    <div class="chap-nav">
+      <button class="nav-btn" onclick="goTo(5)">← Capítulo 5</button>
+      <button class="nav-btn next" onclick="goTo(7)">Capítulo 7 →</button>
+    </div>
+  </div>
+
+  <!-- ════════ CAPÍTULO 7 ════════ -->
+  <div class="chapter" id="chap-7">
+    <div class="chap-header">
+      <div class="chap-num">Capítulo 7</div>
+      <h2 class="chap-title">Plano de 7 Dias</h2>
+      <p class="chap-sub">Conhecimento sem ação é entretenimento.</p>
+    </div>
+    <div class="chap-body">
+      <p>Pegue 7 dias da sua vida e aplique:</p>
+
+      <h4>Dia 1 — Raio-x financeiro</h4>
+      <p>Faça o inventário em 4 quadrantes. Sem fugir.</p>
+
+      <h4>Dia 2 — Calendário de contas</h4>
+      <p>Marque na agenda: salário, contas fixas, fatura, dia de mercado, dia de revisão.</p>
+
+      <h4>Dia 3 — Corte um desperdício</h4>
+      <p>Cancele assinaturas não usadas. Renegocie internet/telefone. Audite o cartão.</p>
+
+      <h4>Dia 4 — Escolha uma dívida</h4>
+      <p>Pegue UMA dívida e ligue. Peça desconto. Não aceite o primeiro número.</p>
+
+      <h4>Dia 5 — Faça uma ação de renda extra</h4>
+      <p>Anuncie 5 itens no OLX, ofereça um serviço no grupo do bairro, mande proposta de freelance.</p>
+
+      <h4>Dia 6 — Separe o primeiro valor para reserva</h4>
+      <p>Mesmo que seja R$ 50. Conta separada. Hábito importa mais que volume.</p>
+
+      <h4>Dia 7 — Monte o plano do mês</h4>
+      <p>Defina 3 metas para os próximos 30 dias. Anote. Coloque na geladeira.</p>
+
+      <blockquote>Mais detalhes no bônus interativo "Plano de 7 Dias".</blockquote>
+      <div style="background: rgba(74,144,226,0.1); border: 1px solid var(--blue); border-radius: 10px; padding: 14px 16px; margin: 18px 0; font-size: 14px; line-height: 1.5; display: flex; gap: 10px; align-items: flex-start;">
+        <span style="font-size: 18px;">💡</span>
+        <div>
+          O <strong>Plano de 7 Dias interativo</strong> guia você passo a passo, com checkboxes e diário das ações de cada dia. Você pode exportar tudo no final.
+          <br><a href="../10-Plano-7-Dias-Interativo/index.html" target="_blank" style="display: inline-block; margin-top: 8px; padding: 8px 14px; background: var(--blue); color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">Abrir o Plano agora →</a>
+        </div>
+      </div>
+
+      <h3 style="margin-top:40px;">Conclusão</h3>
+      <p>Você terminou. <strong>A maioria das pessoas que abre um material como este lê 20%, fecha e nunca mais aplica. Você não foi essa pessoa.</strong></p>
+      <p>Daqui a 12 meses você vai estar em um de dois lugares:</p>
+      <ul>
+        <li><strong>Continuou como estava:</strong> mais 12 meses de boletos, juros, ansiedade.</li>
+        <li><strong>Aplicou o método:</strong> dívidas em queda, reserva em construção, renda extra rodando, paz mental.</li>
+      </ul>
+      <p>A diferença entre os dois cenários não é sorte. É decisão tomada hoje e mantida em todas as terças, sextas e domingos pelos próximos 365 dias.</p>
+      <blockquote>O dinheiro é um péssimo mestre. Mas é um excelente servo. <em>Aprenda a dominá-lo agora.</em></blockquote>
+    </div>
+
+    <div class="note-section">
+      <h4>📝 Suas notas pessoais deste capítulo</h4>
+      <textarea data-note="7" placeholder="Escreva suas reflexões, números, descobertas..."></textarea>
+    </div>
+
+    <button class="mark-read" data-mark="7">✓ Marcar como lido</button>
+
+    <div id="conclusao-final" style="display:none;margin-top:32px;padding:28px 24px;background:linear-gradient(180deg, var(--green-soft) 0%, var(--surface) 100%);border:2px solid var(--green);border-radius:var(--radius);text-align:center;">
+      <div style="font-size:48px;margin-bottom:12px;">🎉</div>
+      <h2 style="font-size:26px;color:var(--green);margin-bottom:10px;letter-spacing:-0.02em;">Você terminou o livro!</h2>
+      <p style="font-size:15px;color:var(--text);margin-bottom:20px;line-height:1.6;">Agora vem o que muda tudo: <strong>aplicar</strong>. Use os bônus interativos pra colocar o método em ação.</p>
+
+      <div style="display:grid;gap:10px;text-align:left;margin:24px 0;">
+        <a href="../10-Plano-7-Dias-Interativo/index.html" target="_blank" style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);border:1px solid var(--green);border-radius:11px;text-decoration:none;color:var(--text);transition:all 0.15s;">
+          <span style="font-size:28px;">📋</span>
+          <div style="flex:1;">
+            <div style="font-weight:700;color:var(--text);">Comece o Plano de 7 Dias</div>
+            <div style="font-size:13px;color:var(--text-soft);">Uma ação por dia, passo a passo. Com diário exportável.</div>
+          </div>
+          <span style="color:var(--green);font-weight:700;">→</span>
+        </a>
+        <a href="../09-Negociacao-Dividas-Interativo/index.html" target="_blank" style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:11px;text-decoration:none;color:var(--text);transition:all 0.15s;">
+          <span style="font-size:28px;">⚖️</span>
+          <div style="flex:1;">
+            <div style="font-weight:700;color:var(--text);">Renegocie suas dívidas</div>
+            <div style="font-size:13px;color:var(--text-soft);">Carta jurídica, scripts e calculadora de desconto.</div>
+          </div>
+          <span style="color:var(--text-soft);">→</span>
+        </a>
+        <a href="../08-50-Ideias-Interativo/index.html" target="_blank" style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:11px;text-decoration:none;color:var(--text);transition:all 0.15s;">
+          <span style="font-size:28px;">💡</span>
+          <div style="flex:1;">
+            <div style="font-weight:700;color:var(--text);">Escolha sua renda extra</div>
+            <div style="font-size:13px;color:var(--text-soft);">Quiz + 60 ideias filtráveis (10 atualizações 2026).</div>
+          </div>
+          <span style="color:var(--text-soft);">→</span>
+        </a>
+        <a href="../07-Checklist-Interativo/index.html" target="_blank" style="display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-radius:11px;text-decoration:none;color:var(--text);transition:all 0.15s;">
+          <span style="font-size:28px;">✅</span>
+          <div style="flex:1;">
+            <div style="font-weight:700;color:var(--text);">Faça sua revisão mensal</div>
+            <div style="font-size:13px;color:var(--text-soft);">30-45 min, todo mês, com diagnóstico automático.</div>
+          </div>
+          <span style="color:var(--text-soft);">→</span>
+        </a>
+      </div>
+
+      <button onclick="exportarNotas()" style="width:100%;padding:14px;border-radius:11px;background:var(--gold);color:#1a1109;border:none;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;">📥 Baixar minhas anotações dos 7 capítulos</button>
+      <p style="font-size:12px;color:var(--text-mute);margin-top:10px;font-style:italic;">Suas anotações nunca saíram do seu aparelho. Esta opção exporta como .txt pra você guardar.</p>
+    </div>
+
+    <div class="chap-nav">
+      <button class="nav-btn" onclick="goTo(6)">← Capítulo 6</button>
+      <button class="nav-btn" onclick="window.print()">🖨️ Imprimir / PDF</button>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <div style="color: var(--green); font-weight: 600; margin-bottom: 10px;">
+      🔒 Seus dados não saem do seu aparelho. Sem servidor, sem login, sem rastreamento.
+    </div>
+    <a href="https://codigodavirada.net.br" target="_blank">codigodavirada.net.br</a> · © 2026 Thiago Porto Oliveira
+  </div>
+
+</div>
+
+<div class="save-indicator" id="save-ind">Salvo ✓</div>
+
+<script>
+const chapters = [
+  { n: 0, t: 'Capa' },
+  { n: 1, t: 'Clareza' },
+  { n: 2, t: 'Organização' },
+  { n: 3, t: 'Plano de ataque' },
+  { n: 4, t: 'Renda extra' },
+  { n: 5, t: 'A reserva de paz' },
+  { n: 6, t: 'Direção' },
+  { n: 7, t: 'Plano de 7 Dias' },
+];
+const STORAGE = 'virada-ebook-v1';
+let state = { current: 0, read: {}, notes: {}, font: 0 };
+
+function load() {
+  const s = localStorage.getItem(STORAGE);
+  if (!s) return;
+  try {
+    state = JSON.parse(s);
+    if (!state.read) state.read = {};
+    if (!state.notes) state.notes = {};
+    if (state.font === undefined) state.font = 0;
+  } catch(e) {}
+}
+
+function save() {
+  localStorage.setItem(STORAGE, JSON.stringify(state));
+  const ind = document.getElementById('save-ind');
+  ind.classList.add('show');
+  clearTimeout(window._sv);
+  window._sv = setTimeout(() => ind.classList.remove('show'), 900);
+}
+
+function readCount() {
+  return Object.values(state.read).filter(v => v).length;
+}
+
+function renderToc() {
+  const toc = document.getElementById('toc');
+  toc.innerHTML = chapters.map(c => `
+    <div class="toc-item ${state.current === c.n ? 'active' : ''} ${state.read[c.n] ? 'read' : ''}" data-go="${c.n}">
+      <div class="toc-num">${c.n === 0 ? '◆' : (state.read[c.n] ? '✓' : c.n)}</div>
+      <div class="toc-title">${c.t}</div>
+    </div>
+  `).join('');
+  toc.querySelectorAll('.toc-item').forEach(it => {
+    it.addEventListener('click', () => { goTo(parseInt(it.dataset.go)); closeSidebar(); });
+  });
+  const c = readCount();
+  document.getElementById('read-count').textContent = c;
+  document.getElementById('bar-fill').style.width = (c / 7 * 100) + '%';
+  document.getElementById('topbar-fill').style.width = (c / 7 * 100) + '%';
+}
+
+function goTo(n) {
+  state.current = n;
+  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+  document.getElementById('chap-' + n).classList.add('active');
+  document.getElementById('topbar-cap').textContent = chapters[n].t;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  renderToc();
+  save();
+}
+
+function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('show'); }
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('show'); }
+
+function adjustFont(delta) {
+  state.font = Math.max(-2, Math.min(3, (state.font || 0) + delta));
+  const base = 17;
+  document.documentElement.style.setProperty('--reading', (base + state.font) + 'px');
+  save();
+}
+
+function bindEvents() {
+  document.getElementById('menu-btn').addEventListener('click', openSidebar);
+  document.getElementById('sidebar-close').addEventListener('click', closeSidebar);
+  document.getElementById('overlay').addEventListener('click', closeSidebar);
+
+  document.querySelectorAll('textarea[data-note]').forEach(t => {
+    t.value = state.notes[t.dataset.note] || '';
+    t.addEventListener('input', () => {
+      state.notes[t.dataset.note] = t.value;
+      save();
+    });
+  });
+
+  document.querySelectorAll('[data-mark]').forEach(b => {
+    const n = b.dataset.mark;
+    if (state.read[n]) { b.classList.add('done'); b.textContent = '✓ Lido — clique pra desmarcar'; }
+    b.addEventListener('click', () => {
+      state.read[n] = !state.read[n];
+      if (state.read[n]) { b.classList.add('done'); b.textContent = '✓ Lido — clique pra desmarcar'; }
+      else { b.classList.remove('done'); b.textContent = '✓ Marcar como lido'; }
+      renderToc();
+      atualizarConclusao();
+      save();
+    });
+  });
+}
+
+function atualizarConclusao() {
+  const el = document.getElementById('conclusao-final');
+  if (!el) return;
+  // Mostra tela de conclusão quando todos os 7 capítulos foram lidos
+  el.style.display = readCount() === 7 ? 'block' : 'none';
+}
+
+function exportarNotas() {
+  const dataHoje = new Date().toLocaleDateString('pt-BR');
+  let txt = `MINHAS ANOTAÇÕES — O CÓDIGO DA VIRADA FINANCEIRA\n`;
+  txt += `Exportado em: ${dataHoje}\n`;
+  txt += `${'═'.repeat(60)}\n\n`;
+  for (let i = 1; i <= 7; i++) {
+    const cap = chapters[i];
+    const nota = (state.notes[i] || '').trim();
+    const lido = state.read[i] ? '✓ LIDO' : '○ não lido';
+    txt += `CAPÍTULO ${i} — ${cap.t}  [${lido}]\n`;
+    if (nota) {
+      txt += `\nMinha anotação:\n${nota}\n`;
+    } else {
+      txt += `(sem anotação)\n`;
+    }
+    txt += `\n${'─'.repeat(60)}\n\n`;
+  }
+  txt += `\nPróximos passos: aplique o método com os bônus interativos.\n`;
+  txt += `\n— codigodavirada.net.br\n`;
+  const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `minhas-anotacoes-codigo-da-virada-${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// INIT
+load();
+adjustFont(0);
+goTo(state.current || 0);
+bindEvents();
+renderToc();
+atualizarConclusao();
+</script>
+
+</body>
+</html>

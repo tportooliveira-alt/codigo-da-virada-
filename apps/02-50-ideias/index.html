@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<meta name="theme-color" content="#0a0a0c">
+<title>50 Ideias de Renda Extra — O Código da Virada</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="50 Ideias">
+<style>
+  :root {
+    --bg: #0a0a0c;
+    --surface: #16161a;
+    --surface-2: #1f1f24;
+    --line: #2a2a30;
+    --text: #f5f5f7;
+    --text-soft: #b0b0b8;
+    --text-mute: #707078;
+    --green: #1d9e75;
+    --green-dark: #169068;
+    --green-soft: rgba(29, 158, 117, 0.12);
+    --gold: #f0a830;
+    --gold-soft: rgba(240, 168, 48, 0.12);
+    --red: #d65656;
+    --blue: #4a90e2;
+    --purple: #9b59b6;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  body { padding: 24px 16px 100px; max-width: 760px; margin: 0 auto; }
+
+  header { padding: 8px 4px 28px; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; color: var(--green); font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .brand .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  h1 { font-size: 28px; font-weight: 700; line-height: 1.15; margin-bottom: 10px; letter-spacing: -0.02em; }
+  .subtitle { color: var(--text-soft); font-size: 15px; max-width: 540px; }
+
+  .tabs {
+    display: flex; gap: 4px; background: var(--surface);
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: 4px; margin: 24px 0;
+  }
+  .tab {
+    flex: 1; padding: 11px 8px; border-radius: 9px; text-align: center;
+    font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text-soft);
+    transition: all 0.2s; border: none; background: transparent;
+    font-family: inherit;
+  }
+  .tab.active { background: var(--green); color: white; }
+
+  .quiz-panel, .lista-panel, .favoritas-panel { display: none; }
+  .active-panel { display: block; }
+
+  /* === QUIZ === */
+  .quiz-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
+  }
+  .quiz-step { font-size: 12px; color: var(--green); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+  .quiz-question { font-size: 20px; font-weight: 600; margin-bottom: 18px; line-height: 1.3; }
+  .quiz-option {
+    width: 100%; text-align: left; padding: 16px 18px;
+    background: var(--surface-2); border: 1px solid var(--line);
+    color: var(--text); font-size: 15px; font-weight: 500;
+    border-radius: 11px; margin-bottom: 10px; cursor: pointer;
+    transition: all 0.18s; font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .quiz-option:hover { border-color: var(--green); background: #1c1c22; }
+  .quiz-option.selected { border-color: var(--green); background: var(--green-soft); }
+  .quiz-progress {
+    width: 100%; height: 4px; background: var(--surface-2);
+    border-radius: 2px; margin-bottom: 20px; overflow: hidden;
+  }
+  .quiz-progress-bar {
+    height: 100%; background: var(--green);
+    transition: width 0.4s ease; border-radius: 2px;
+  }
+  .quiz-nav { display: flex; gap: 10px; margin-top: 8px; }
+  .quiz-nav button {
+    flex: 1; padding: 14px; border-radius: 11px; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; font-family: inherit; border: 1px solid var(--line);
+    background: var(--surface); color: var(--text);
+  }
+  .quiz-nav button.primary { background: var(--green); border-color: var(--green); color: white; }
+  .quiz-nav button.primary:disabled { background: var(--surface-2); border-color: var(--line); color: var(--text-mute); cursor: not-allowed; }
+  .quiz-nav button.primary:hover:not(:disabled) { background: var(--green-dark); }
+
+  .quiz-result-card {
+    background: linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+    border: 2px solid var(--green); border-radius: var(--radius);
+    padding: 28px 24px; margin-bottom: 16px; text-align: center;
+  }
+  .quiz-result-card h2 { font-size: 22px; margin-bottom: 8px; }
+  .quiz-result-card p { color: var(--text-soft); font-size: 15px; }
+
+  /* === FILTROS === */
+  .filtros {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
+  }
+  .filtro-label { font-size: 12px; color: var(--text-mute); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .chips:last-child { margin-bottom: 0; }
+  .chip {
+    padding: 8px 14px; border-radius: 999px; background: var(--surface-2);
+    border: 1px solid var(--line); color: var(--text-soft);
+    font-size: 13px; cursor: pointer; transition: all 0.15s;
+    font-weight: 500; font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .chip.active { background: var(--green); border-color: var(--green); color: white; }
+  .chip:hover:not(.active) { color: var(--text); border-color: var(--text-mute); }
+
+  /* === IDEIAS === */
+  .lista-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px; padding: 0 4px;
+  }
+  .lista-count { font-size: 14px; color: var(--text-soft); font-weight: 500; }
+
+  .ideia {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px; margin-bottom: 10px;
+    display: flex; gap: 14px; align-items: flex-start;
+    transition: all 0.18s;
+  }
+  .ideia:hover { border-color: var(--text-mute); }
+  .ideia.fav { border-color: var(--green); background: var(--green-soft); }
+  .ideia-num {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: var(--surface-2); display: flex; align-items: center;
+    justify-content: center; font-size: 13px; font-weight: 700; color: var(--text-mute);
+    flex-shrink: 0;
+  }
+  .ideia.fav .ideia-num { background: var(--green); color: white; }
+  .ideia-content { flex: 1; min-width: 0; }
+  .ideia-titulo { font-size: 15px; font-weight: 600; line-height: 1.35; margin-bottom: 6px; }
+  .ideia-descricao { font-size: 13px; color: var(--text-soft); line-height: 1.5; margin-bottom: 8px; }
+  .ideia-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .ideia-tag {
+    font-size: 11px; padding: 3px 9px; border-radius: 999px;
+    background: var(--surface-2); color: var(--text-mute); font-weight: 500;
+  }
+  .ideia-tag.cap-baixo { background: rgba(29,158,117,0.18); color: var(--green); }
+  .ideia-tag.cap-medio { background: var(--gold-soft); color: var(--gold); }
+  .ideia-tag.tempo-rapido { background: rgba(74,144,226,0.15); color: var(--blue); }
+  .fav-btn {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: var(--surface-2); border: 1px solid var(--line);
+    color: var(--text-mute); cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .fav-btn:hover { color: var(--green); border-color: var(--green); }
+  .ideia.fav .fav-btn { background: var(--green); border-color: var(--green); color: white; }
+
+  /* === FAVORITAS === */
+  .fav-empty {
+    text-align: center; padding: 60px 20px; color: var(--text-mute);
+  }
+  .fav-empty .icon { font-size: 48px; margin-bottom: 12px; }
+  .fav-empty p { font-size: 15px; }
+  .plano-card {
+    background: var(--surface); border: 1px solid var(--green);
+    border-radius: var(--radius); padding: 20px; margin-top: 18px;
+  }
+  .plano-card h3 { font-size: 17px; margin-bottom: 10px; color: var(--green); }
+  .plano-step { padding: 12px 0; border-bottom: 1px solid var(--line); display: flex; gap: 12px; }
+  .plano-step:last-child { border: none; padding-bottom: 0; }
+  .plano-step-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--green);
+    color: white; font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .plano-step-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+  /* === MOBILE === */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    body { max-width: 840px; padding: 32px 24px 120px; }
+    h1 { font-size: 32px; }
+  }
+  @media (max-width: 480px) {
+    body { padding: 16px 12px 100px; }
+    h1 { font-size: 22px; }
+    .quiz-card { padding: 18px; }
+    .quiz-question { font-size: 17px; }
+    .quiz-option { font-size: 14px; padding: 14px 16px; }
+    .tabs { font-size: 12px; }
+    .tab { font-size: 12px; padding: 10px 4px; }
+    .ideia { padding: 14px; gap: 10px; }
+    .ideia-num { width: 32px; height: 32px; }
+    .ideia-titulo { font-size: 14px; }
+  }
+
+  .footer-note {
+    text-align: center; font-size: 12px; color: var(--text-mute);
+    margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line);
+  }
+  .footer-note a { color: var(--green); text-decoration: none; }
+  .save-indicator {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--green); color: white; padding: 10px 20px;
+    border-radius: 999px; font-size: 13px; font-weight: 600;
+    opacity: 0; transition: opacity 0.3s; pointer-events: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4); z-index: 1000;
+  }
+  .save-indicator.show { opacity: 1; }
+  .privacy-badge {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--green-soft); border: 1px solid var(--green);
+    border-radius: 11px; padding: 12px 14px; margin-top: 18px;
+    font-size: 13px; line-height: 1.45; color: var(--text);
+  }
+  .privacy-badge strong { color: var(--green); }
+  .privacy-icon { font-size: 22px; flex-shrink: 0; }
+  .cover-img {
+    width: 100%; max-width: 240px; aspect-ratio: 3/4;
+    border-radius: 12px; margin: 0 auto 20px; display: block;
+    object-fit: cover; box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    border: 1px solid var(--line);
+  }
+  /* Selo de ideias bônus 2026 */
+  .badge-novo {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    background: linear-gradient(135deg, var(--gold), #d48a1f);
+    color: #1a1109;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    vertical-align: middle;
+    box-shadow: 0 2px 6px rgba(240,168,48,0.25);
+  }
+  .header-extra-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, var(--gold), #d48a1f);
+    color: #1a1109;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    border-radius: 6px;
+    vertical-align: middle;
+    box-shadow: 0 4px 12px rgba(240,168,48,0.3);
+  }
+  @media (max-width: 480px) {
+    .header-extra-badge { display: block; margin: 8px 0 0 0; width: fit-content; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="capa.jpg" alt="Capa de 50 Ideias de Renda Extra" class="cover-img">
+  <div class="brand"><span class="dot"></span> O Código da Virada · Bônus 1</div>
+  <h1>50 Ideias de Renda Extra <span class="header-extra-badge">+10 BÔNUS 2026</span></h1>
+  <p class="subtitle">Faça o quiz pra descobrir qual combina com você. Salve suas 3 favoritas e monte um plano de 30 dias.<br><span style="color:var(--gold);font-weight:600;">10 ideias exclusivas atualizadas 2026 marcadas com selo BÔNUS.</span></p>
+  <div class="privacy-badge">
+    <span class="privacy-icon">🔒</span>
+    <div>
+      <strong>100% no seu aparelho</strong> · Sem servidor, sem login, sem rastreamento. Suas respostas e favoritas ficam só com você.
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-tab="quiz">🎯 Quiz</button>
+  <button class="tab" data-tab="lista">📋 Lista (60)</button>
+  <button class="tab" data-tab="favoritas">⭐ Minhas 3</button>
+</div>
+
+<!-- ═══════════ QUIZ ═══════════ -->
+<div class="quiz-panel active-panel" id="panel-quiz">
+  <div id="quiz-container"></div>
+</div>
+
+<!-- ═══════════ LISTA ═══════════ -->
+<div class="lista-panel" id="panel-lista">
+  <div class="filtros">
+    <div class="filtro-label">Categoria</div>
+    <div class="chips" id="chips-categoria"></div>
+    <div class="filtro-label">Capital necessário</div>
+    <div class="chips" id="chips-capital"></div>
+    <div class="filtro-label">Tempo até primeira venda</div>
+    <div class="chips" id="chips-tempo"></div>
+  </div>
+  <div class="lista-header">
+    <span class="lista-count" id="lista-count">50 ideias</span>
+    <button id="limpar-filtros" style="background:transparent;border:none;color:var(--text-mute);font-size:13px;cursor:pointer;font-family:inherit;">Limpar filtros</button>
+  </div>
+  <div id="lista-ideias"></div>
+</div>
+
+<!-- ═══════════ FAVORITAS ═══════════ -->
+<div class="favoritas-panel" id="panel-favoritas">
+  <div id="favoritas-container"></div>
+</div>
+
+<div class="footer-note">
+  <div style="color: var(--green); font-weight: 600; margin-bottom: 10px;">
+    🔒 Seus dados não saem do seu aparelho. Sem servidor, sem login, sem rastreamento.
+  </div>
+  <a href="https://codigodavirada.net.br" target="_blank">codigodavirada.net.br</a>
+</div>
+
+<div class="save-indicator" id="save-ind">Salvo ✓</div>
+
+<script>
+const ideias = [
+  // Renda Rápida (1-10)
+  { id: 1, cat: 'rapida', cap: 'zero', tempo: 'rapido', titulo: 'Desapego de eletrônicos', desc: 'Celular antigo, tablet, notebook, console parado. OLX, Mercado Livre, Marketplace.' },
+  { id: 2, cat: 'rapida', cap: 'zero', tempo: 'rapido', titulo: 'Desapego de roupas e calçados', desc: 'Peças sem uso há mais de 6 meses. Enjoei, brechó local, OLX.' },
+  { id: 3, cat: 'rapida', cap: 'zero', tempo: 'rapido', titulo: 'Desapego de móveis e eletrodomésticos', desc: 'Sanduicheira, micro-ondas extra, móvel guardado, ferramentas paradas.' },
+  { id: 4, cat: 'rapida', cap: 'zero', tempo: 'rapido', titulo: 'Desapego de livros, CDs, DVDs e jogos', desc: 'Estante Virtual, Mercado Livre.' },
+  { id: 5, cat: 'rapida', cap: 'zero', tempo: 'rapido', titulo: 'Vender bicicleta, skate ou esportivo', desc: 'Equipamento parado vale dinheiro. OLX, grupos locais.' },
+  { id: 6, cat: 'rapida', cap: 'zero', tempo: 'rapido', titulo: 'Vender joias, bijuterias e relógios', desc: 'Peças sem uso. Joalheria local também compra ouro.' },
+  { id: 7, cat: 'rapida', cap: 'zero', tempo: 'medio', titulo: 'Aluguel de quarto/sofá no Airbnb', desc: 'Se você tem espaço extra. Renda recorrente.' },
+  { id: 8, cat: 'rapida', cap: 'zero', tempo: 'medio', titulo: 'Aluguel de vaga de garagem', desc: 'Prédios com demanda pagam bem.' },
+  { id: 9, cat: 'rapida', cap: 'zero', tempo: 'rapido', titulo: 'Vaquinha esquecida', desc: 'Dinheiro de "vaquinha" antiga que você esqueceu.' },
+  { id: 10, cat: 'rapida', cap: 'zero', tempo: 'medio', titulo: 'Saque-aniversário do FGTS', desc: 'Se ativou a modalidade no app FGTS, recebe parcela todo ano no mês do seu aniversário. Atenção: perde acesso à multa rescisória em demissões.' },
+
+  // Serviços Locais (11-21)
+  { id: 11, cat: 'servicos', cap: 'zero', tempo: 'medio', titulo: 'Faxina e diárias', desc: 'GetNinjas, Parafuzo, indicação no condomínio.' },
+  { id: 12, cat: 'servicos', cap: 'zero', tempo: 'medio', titulo: 'Cuidador de pets', desc: 'DogHero, Petlove, anúncio no bairro.' },
+  { id: 13, cat: 'servicos', cap: 'zero', tempo: 'medio', titulo: 'Passear com cachorros', desc: 'DogHero ou contato direto. Bom em bairros nobres.' },
+  { id: 14, cat: 'servicos', cap: 'zero', tempo: 'medio', titulo: 'Cuidar de criança ou idoso por horas', desc: 'Com pessoas conhecidas, por confiança.' },
+  { id: 15, cat: 'servicos', cap: 'baixo', tempo: 'medio', titulo: 'Cortar grama / jardinagem', desc: 'No bairro. Precisa de equipamento básico.' },
+  { id: 16, cat: 'servicos', cap: 'baixo', tempo: 'medio', titulo: 'Lavar carros em casa', desc: 'Material custa pouco e demanda é alta.' },
+  { id: 17, cat: 'servicos', cap: 'baixo', tempo: 'medio', titulo: 'Pequenos consertos elétricos ou hidráulicos', desc: 'Se você tem habilidade. GetNinjas funciona.' },
+  { id: 18, cat: 'servicos', cap: 'zero', tempo: 'medio', titulo: 'Organização de armários e mudanças', desc: 'Nicho crescente, ticket bom.' },
+  { id: 19, cat: 'servicos', cap: 'zero', tempo: 'medio', titulo: 'Costura, ajustes de roupa, conserto de zíper', desc: 'Demanda alta em bairros residenciais.' },
+  { id: 20, cat: 'servicos', cap: 'medio', tempo: 'medio', titulo: 'Motorista por aplicativo', desc: 'Uber, 99 em horários extras. Precisa carro.' },
+  { id: 21, cat: 'servicos', cap: 'baixo', tempo: 'medio', titulo: 'Entregador (iFood, Rappi)', desc: 'Bike, moto ou carro. Renda diária.' },
+
+  // Revenda (22-30)
+  { id: 22, cat: 'revenda', cap: 'medio', tempo: 'longo', titulo: 'Revenda de roupas em atacado', desc: 'Bom Retiro, Brás. Margem 100-200%.' },
+  { id: 23, cat: 'revenda', cap: 'medio', tempo: 'longo', titulo: 'Revenda de cosméticos', desc: 'Mundial Mix, Beleza na Web. Recorrência forte.' },
+  { id: 24, cat: 'revenda', cap: 'baixo', tempo: 'longo', titulo: 'Revenda importados', desc: 'Shopee, AliExpress, Shein. Cuidado com prazo.' },
+  { id: 25, cat: 'revenda', cap: 'baixo', tempo: 'medio', titulo: 'Marmitas fitness ou caseiras', desc: 'Vizinhos e colegas de trabalho. Recorrência.' },
+  { id: 26, cat: 'revenda', cap: 'baixo', tempo: 'medio', titulo: 'Bolo no pote, brownies, cookies', desc: 'Festas e encomendas. Margem alta.' },
+  { id: 27, cat: 'revenda', cap: 'baixo', tempo: 'medio', titulo: 'Salgados congelados', desc: 'Festas e eventos. Estocável.' },
+  { id: 28, cat: 'revenda', cap: 'baixo', tempo: 'medio', titulo: 'Café gourmet, pão artesanal, granola', desc: 'Pequena escala, nicho premium.' },
+  { id: 29, cat: 'revenda', cap: 'baixo', tempo: 'medio', titulo: 'Revenda de papelaria personalizada', desc: 'Canetas, agendas, planners.' },
+  { id: 30, cat: 'revenda', cap: 'baixo', tempo: 'medio', titulo: 'Venda de plantas e suculentas', desc: 'Se você tem espaço e jeito. Margem ótima.' },
+
+  // Digital (31-42)
+  { id: 31, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Designer iniciante no Canva', desc: 'Logos, posts, banners, currículos. Workana, Fiverr.' },
+  { id: 32, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Redator freelance', desc: 'Textos pra blogs, legendas, descrições de produto.' },
+  { id: 33, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Editor de vídeo no CapCut', desc: 'Pra influenciadores, lojistas, podcasts.' },
+  { id: 34, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Tradução simples', desc: 'Inglês ↔ português. Workana, Fiverr.' },
+  { id: 35, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Suporte administrativo virtual', desc: 'Agenda, planilhas, e-mails. 99freelas.' },
+  { id: 36, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Atendimento ao cliente remoto', desc: 'Chat, WhatsApp Business. Hotmart contrata.' },
+  { id: 37, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Transcrição de áudios e vídeos', desc: 'Demanda alta. Plataformas internacionais pagam bem.' },
+  { id: 38, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Locução para vídeos curtos', desc: 'Se você tem boa dicção. Fiverr.' },
+  { id: 39, cat: 'digital', cap: 'zero', tempo: 'longo', titulo: 'Página temática no Instagram (sem aparecer)', desc: 'Receitas, frases, decoração, dicas. Monetiza com afiliados.' },
+  { id: 40, cat: 'digital', cap: 'zero', tempo: 'longo', titulo: 'Canal "faceless" no YouTube', desc: 'Voz IA ou narração + imagens. Construção longa.' },
+  { id: 41, cat: 'digital', cap: 'zero', tempo: 'longo', titulo: 'Pinterest com tráfego pra afiliados', desc: 'Menos saturado que Instagram. Compounding lento.' },
+  { id: 42, cat: 'digital', cap: 'zero', tempo: 'longo', titulo: 'Newsletter paga no Substack/Beehiiv', desc: 'Funciona se você tem nicho claro.' },
+
+  // Habilidades (43-47)
+  { id: 43, cat: 'habilidades', cap: 'zero', tempo: 'medio', titulo: 'Aulas particulares', desc: 'Matemática, idiomas, instrumento, qualquer matéria.' },
+  { id: 44, cat: 'habilidades', cap: 'zero', tempo: 'medio', titulo: 'Aulas online via Zoom', desc: 'Concentre-se num nicho específico.' },
+  { id: 45, cat: 'habilidades', cap: 'zero', tempo: 'medio', titulo: 'Mentoria de algo que você domina', desc: 'Finanças, fitness, organização, parentalidade, carreira.' },
+  { id: 46, cat: 'habilidades', cap: 'zero', tempo: 'medio', titulo: 'Consultoria pontual', desc: 'Pequenos negócios em planilhas, marketing, atendimento.' },
+  { id: 47, cat: 'habilidades', cap: 'zero', tempo: 'medio', titulo: 'Excel, planilhas e automações', desc: 'Muita demanda em pequenos negócios.' },
+
+  // Longo prazo (48-50)
+  { id: 48, cat: 'longo', cap: 'baixo', tempo: 'longo', titulo: 'Curso online próprio', desc: 'Empacote o que você já sabe. Cakto, Hotmart, Kiwify.' },
+  { id: 49, cat: 'longo', cap: 'zero', tempo: 'longo', titulo: 'E-book próprio', desc: 'Sobre algo que você domina e resolve uma dor real.' },
+  { id: 50, cat: 'longo', cap: 'medio', tempo: 'longo', titulo: 'Pequeno negócio local validado', desc: 'Pré-venda antes de qualquer investimento.' },
+
+  // === BÔNUS 2026 — 10 ideias extras atualizadas ===
+  { id: 51, cat: 'rapida', cap: 'zero', tempo: 'rapido', titulo: 'Cashback em apps (Méliuz, Picpay, Inter)', desc: 'Esforço zero — dinheiro de volta em compras que você já faria. Combina com indicação por código de convite.', novo: true },
+  { id: 52, cat: 'servicos', cap: 'baixo', tempo: 'medio', titulo: 'Manicure, design de sobrancelha, cabelo em casa', desc: 'Curso rápido + investimento mínimo. Cliente vai até você ou no bairro. Ticket bom.', novo: true },
+  { id: 53, cat: 'revenda', cap: 'zero', tempo: 'medio', titulo: 'Revenda Avon, Natura, Boticário, Eudora', desc: 'Kit inicial é gratuito ou baixíssimo. Sistema pronto, recorrência forte. Funciona em qualquer cidade do BR.', novo: true },
+  { id: 54, cat: 'revenda', cap: 'baixo', tempo: 'medio', titulo: 'Brechó digital no Enjoei (não só desapego)', desc: 'Compra em brechó físico ou Shein parado, revende com lucro no Enjoei. Vira fluxo, não desapego pontual.', novo: true },
+  { id: 55, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'TikTok Shop afiliado', desc: 'Bombou no BR em 2025-26. Posta vídeo curto promovendo produto, comissão por venda. Ideal pra quem grava bem.', novo: true },
+  { id: 56, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Prompt engineering / freela com IA', desc: 'Cria fluxos no ChatGPT, Claude, n8n pra pequenos negócios. Mercado pagando bem em 2026.', novo: true },
+  { id: 57, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Print on Demand (Estampaí, Yampi)', desc: 'Sobe estampa, plataforma imprime e envia. Zero estoque. Você só desenha e divulga.', novo: true },
+  { id: 58, cat: 'digital', cap: 'zero', tempo: 'medio', titulo: 'Anotador de dados pra IA (Surge, Outlier, Scale)', desc: 'Plataformas pagam em USD pra você avaliar respostas de IA. Inglês básico ajuda. Demanda alta em 2026.', novo: true },
+  { id: 59, cat: 'habilidades', cap: 'zero', tempo: 'rapido', titulo: 'Currículos e perfis de LinkedIn pra outros', desc: 'Demanda gigante. Cobra R$ 50–150 por currículo, R$ 100–300 por perfil completo. Workana, Fiverr.', novo: true },
+  { id: 60, cat: 'longo', cap: 'zero', tempo: 'longo', titulo: 'Comunidade paga (Discord, Telegram, WhatsApp)', desc: 'Mensalidade baixa (R$ 19–49) × volume. Funciona em nicho que você já domina. Hotmart e Cakto têm integração pronta.', novo: true },
+];
+
+const catLabels = {
+  rapida: '🟢 Rápida',
+  servicos: '🔵 Serviços',
+  revenda: '🟡 Revenda',
+  digital: '🟣 Digital',
+  habilidades: '🟠 Habilidades',
+  longo: '🔴 Longo prazo',
+};
+const capLabels = { zero: 'R$ 0', baixo: 'Até R$ 100', medio: 'R$ 100 a R$ 500' };
+const tempoLabels = { rapido: 'Em 7 dias', medio: 'Em 30 dias', longo: 'Em 90+ dias' };
+
+const STORAGE_KEY = 'virada-50-ideias-v1';
+let state = {
+  quiz: { step: 0, answers: {}, done: false },
+  filters: { cat: 'todas', cap: 'todas', tempo: 'todas' },
+  favs: [],
+};
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const ind = document.getElementById('save-ind');
+  ind.classList.add('show');
+  clearTimeout(window._saveTimer);
+  window._saveTimer = setTimeout(() => ind.classList.remove('show'), 1000);
+}
+function load() {
+  const s = localStorage.getItem(STORAGE_KEY);
+  if (s) { try { state = JSON.parse(s); if (!state.quiz) state.quiz = { step: 0, answers: {}, done: false }; if (!state.filters) state.filters = { cat: 'todas', cap: 'todas', tempo: 'todas' }; if (!state.favs) state.favs = []; } catch(e) {} }
+}
+
+// === QUIZ ===
+const quizQuestions = [
+  {
+    q: 'Quanto dinheiro você tem disponível pra começar?',
+    options: [
+      { label: 'Zero — só o que eu já tenho em casa', val: 'zero' },
+      { label: 'Até R$ 100 de investimento inicial', val: 'baixo' },
+      { label: 'R$ 100 a R$ 500 disponíveis', val: 'medio' },
+    ],
+    key: 'cap',
+  },
+  {
+    q: 'Quanto tempo livre você tem por semana?',
+    options: [
+      { label: 'Menos de 5 horas (estou muito ocupado)', val: 'pouco' },
+      { label: 'De 5 a 15 horas (fins de semana e algumas noites)', val: 'medio' },
+      { label: 'Mais de 15 horas (tô em transição)', val: 'muito' },
+    ],
+    key: 'tempo_disp',
+  },
+  {
+    q: 'Quando você precisa do dinheiro?',
+    options: [
+      { label: 'Agora — preciso de algo nos próximos 7 dias', val: 'rapido' },
+      { label: 'Mês que vem — quero estabilidade em 30 dias', val: 'medio' },
+      { label: 'Estou construindo pra médio prazo (90+ dias)', val: 'longo' },
+    ],
+    key: 'prazo',
+  },
+  {
+    q: 'Qual estilo você prefere?',
+    options: [
+      { label: 'Vender coisa física (presencial ou loja)', val: 'fisico' },
+      { label: 'Prestar serviço (presencial, no bairro)', val: 'servico' },
+      { label: 'Trabalhar online (computador / celular)', val: 'digital' },
+      { label: 'Ensinar algo que eu já sei', val: 'ensino' },
+    ],
+    key: 'estilo',
+  },
+];
+
+function renderQuiz() {
+  const c = document.getElementById('quiz-container');
+  if (state.quiz.done) {
+    const recs = recomendar();
+    c.innerHTML = `
+      <div class="quiz-result-card">
+        <h2>🎯 Suas 5 ideias mais combinadas</h2>
+        <p>Com base no que você respondeu. Toca em uma pra ver na lista, ou favorita marcando ⭐.</p>
+      </div>
+      <div id="quiz-result-list"></div>
+      <button class="quiz-nav button" onclick="resetQuiz()" style="width:100%;padding:14px;border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--text-soft);border:1px solid var(--line);margin-top:16px;font-family:inherit;">Refazer quiz</button>
+    `;
+    const list = document.getElementById('quiz-result-list');
+    list.innerHTML = recs.map(id => ideiaHTML(ideias.find(i => i.id === id))).join('');
+    bindFavBtns();
+    return;
+  }
+  const step = state.quiz.step;
+  const q = quizQuestions[step];
+  const pct = ((step) / quizQuestions.length) * 100;
+  c.innerHTML = `
+    <div class="quiz-progress"><div class="quiz-progress-bar" style="width:${pct}%"></div></div>
+    <div class="quiz-card">
+      <div class="quiz-step">Pergunta ${step + 1} de ${quizQuestions.length}</div>
+      <div class="quiz-question">${q.q}</div>
+      ${q.options.map(o => `
+        <button class="quiz-option ${state.quiz.answers[q.key] === o.val ? 'selected' : ''}" data-val="${o.val}" data-key="${q.key}">${o.label}</button>
+      `).join('')}
+    </div>
+    <div class="quiz-nav">
+      ${step > 0 ? '<button onclick="prevQuiz()">← Voltar</button>' : ''}
+      <button class="primary" id="next-quiz" onclick="nextQuiz()" ${!state.quiz.answers[q.key] ? 'disabled' : ''}>${step === quizQuestions.length - 1 ? 'Ver resultado →' : 'Próxima →'}</button>
+    </div>
+  `;
+  c.querySelectorAll('.quiz-option').forEach(b => {
+    b.addEventListener('click', () => {
+      const k = b.dataset.key, v = b.dataset.val;
+      state.quiz.answers[k] = v;
+      save();
+      renderQuiz();
+    });
+  });
+}
+function nextQuiz() {
+  if (state.quiz.step === quizQuestions.length - 1) {
+    state.quiz.done = true;
+  } else {
+    state.quiz.step++;
+  }
+  save();
+  renderQuiz();
+}
+function prevQuiz() {
+  if (state.quiz.step > 0) { state.quiz.step--; save(); renderQuiz(); }
+}
+function resetQuiz() {
+  state.quiz = { step: 0, answers: {}, done: false };
+  save();
+  renderQuiz();
+}
+
+function recomendar() {
+  const { cap, tempo_disp, prazo, estilo } = state.quiz.answers;
+  const scores = {};
+  ideias.forEach(i => {
+    let s = 0;
+
+    // Capital — match progressivo (quem tem mais grana pode fazer tudo, com peso menor pra opções "menores")
+    if (cap === 'zero' && i.cap === 'zero') s += 4;
+    if (cap === 'baixo' && (i.cap === 'zero' || i.cap === 'baixo')) s += 3;
+    if (cap === 'medio' && (i.cap === 'baixo' || i.cap === 'medio')) s += 4;
+    if (cap === 'medio' && i.cap === 'zero') s += 2;
+
+    // Prazo — match exato
+    if (prazo === 'rapido' && i.tempo === 'rapido') s += 4;
+    if (prazo === 'medio' && i.tempo === 'medio') s += 3;
+    if (prazo === 'longo' && i.tempo === 'longo') s += 3;
+
+    // Estilo — match por categoria
+    if (estilo === 'fisico' && (i.cat === 'rapida' || i.cat === 'revenda')) s += 3;
+    if (estilo === 'servico' && i.cat === 'servicos') s += 4;
+    if (estilo === 'digital' && i.cat === 'digital') s += 4;
+    // "ensino" inclui curso (48), e-book (49) e comunidade paga (60) — não só categoria 'habilidades'
+    if (estilo === 'ensino' && (i.cat === 'habilidades' || i.id === 48 || i.id === 49 || i.id === 60)) s += 4;
+
+    // Tempo disponível — favorece o que combina com a disponibilidade
+    if (tempo_disp === 'pouco' && (i.cat === 'rapida' || i.cat === 'digital')) s += 1;
+    if (tempo_disp === 'medio' && (i.cat === 'servicos' || i.cat === 'revenda' || i.cat === 'digital')) s += 1;
+    if (tempo_disp === 'muito' && (i.cat === 'longo' || i.cat === 'servicos' || i.cat === 'habilidades')) s += 2;
+
+    // Pequeno empurrão pras ideias bônus 2026 (mais atualizadas)
+    if (i.novo) s += 1;
+
+    scores[i.id] = s;
+  });
+  return Object.entries(scores).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([id]) => parseInt(id));
+}
+
+// === LISTA ===
+function ideiaHTML(i) {
+  const isFav = state.favs.includes(i.id);
+  return `
+    <div class="ideia ${isFav ? 'fav' : ''}" data-id="${i.id}">
+      <div class="ideia-num">${String(i.id).padStart(2,'0')}</div>
+      <div class="ideia-content">
+        <div class="ideia-titulo">${i.titulo}${i.novo ? ' <span class="badge-novo">BÔNUS 2026</span>' : ''}</div>
+        <div class="ideia-descricao">${i.desc}</div>
+        <div class="ideia-tags">
+          <span class="ideia-tag">${catLabels[i.cat]}</span>
+          <span class="ideia-tag cap-${i.cap}">${capLabels[i.cap]}</span>
+          <span class="ideia-tag tempo-${i.tempo}">${tempoLabels[i.tempo]}</span>
+        </div>
+      </div>
+      <button class="fav-btn" data-fav="${i.id}" aria-label="Favoritar">${isFav ? '★' : '☆'}</button>
+    </div>
+  `;
+}
+
+function renderLista() {
+  // chips
+  function renderChips(targetId, options, currentVal, filterKey) {
+    const el = document.getElementById(targetId);
+    el.innerHTML = `<button class="chip ${currentVal === 'todas' ? 'active' : ''}" data-val="todas">Todas</button>` +
+      Object.entries(options).map(([k, label]) =>
+        `<button class="chip ${currentVal === k ? 'active' : ''}" data-val="${k}">${label}</button>`
+      ).join('');
+    el.querySelectorAll('.chip').forEach(b => {
+      b.addEventListener('click', () => {
+        state.filters[filterKey] = b.dataset.val;
+        save();
+        renderLista();
+      });
+    });
+  }
+  renderChips('chips-categoria', catLabels, state.filters.cat, 'cat');
+  renderChips('chips-capital', capLabels, state.filters.cap, 'cap');
+  renderChips('chips-tempo', tempoLabels, state.filters.tempo, 'tempo');
+
+  // filtra
+  const filtradas = ideias.filter(i =>
+    (state.filters.cat === 'todas' || i.cat === state.filters.cat) &&
+    (state.filters.cap === 'todas' || i.cap === state.filters.cap) &&
+    (state.filters.tempo === 'todas' || i.tempo === state.filters.tempo)
+  );
+
+  document.getElementById('lista-count').textContent = filtradas.length === ideias.length ? `${ideias.length} ideias` : `${filtradas.length} de ${ideias.length}`;
+  const list = document.getElementById('lista-ideias');
+  if (filtradas.length === 0) {
+    list.innerHTML = '<div class="fav-empty"><div class="icon">🔍</div><p>Nenhuma ideia com esses filtros.<br>Tenta soltar algum.</p></div>';
+  } else {
+    list.innerHTML = filtradas.map(ideiaHTML).join('');
+  }
+  bindFavBtns();
+}
+
+function bindFavBtns() {
+  document.querySelectorAll('.fav-btn').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = parseInt(b.dataset.fav);
+      const i = state.favs.indexOf(id);
+      if (i >= 0) {
+        state.favs.splice(i, 1);
+      } else {
+        if (state.favs.length >= 3) {
+          alert('Você já escolheu 3 favoritas! Remove uma antes de adicionar outra.');
+          return;
+        }
+        state.favs.push(id);
+      }
+      save();
+      renderLista();
+      if (document.getElementById('panel-favoritas').classList.contains('active-panel')) renderFavoritas();
+      if (state.quiz.done) renderQuiz();
+    });
+  });
+}
+
+document.getElementById('limpar-filtros').addEventListener('click', () => {
+  state.filters = { cat: 'todas', cap: 'todas', tempo: 'todas' };
+  save();
+  renderLista();
+});
+
+// === FAVORITAS ===
+function renderFavoritas() {
+  const c = document.getElementById('favoritas-container');
+  if (state.favs.length === 0) {
+    c.innerHTML = `
+      <div class="fav-empty">
+        <div class="icon">⭐</div>
+        <p>Você ainda não escolheu nenhuma favorita.<br>Vai na <strong>Lista</strong> e marca <strong>até 3 ideias</strong> que combinam mais com você.</p>
+      </div>
+    `;
+    return;
+  }
+  c.innerHTML = `
+    <div style="margin-bottom:16px;padding:14px 16px;background:var(--green-soft);border:1px solid var(--green);border-radius:12px;">
+      <div style="font-size:13px;font-weight:700;color:var(--green);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px;">Suas ${state.favs.length} escolhidas</div>
+      <div style="font-size:14px;color:var(--text-soft);">Foque nessas. Execute por 30 dias. Avalie. Ajuste. A pior estratégia é começar 5 ao mesmo tempo e abandonar todas.</div>
+    </div>
+    ${state.favs.map(id => ideiaHTML(ideias.find(i => i.id === id))).join('')}
+    <div class="plano-card">
+      <h3>🎯 Plano de execução (30 dias)</h3>
+      <div class="plano-step"><div class="plano-step-num">1</div><div class="plano-step-text"><strong>Semana 1:</strong> Escolha 1 das 3 favoritas. Não tenta as 3 juntas — vira fracasso garantido.</div></div>
+      <div class="plano-step"><div class="plano-step-num">2</div><div class="plano-step-text"><strong>Semana 2:</strong> Faça 5 ações concretas dessa 1 ideia (anúncio, contato, primeira venda, etc).</div></div>
+      <div class="plano-step"><div class="plano-step-num">3</div><div class="plano-step-text"><strong>Semana 3:</strong> Já fez R$ 100? Mantém. Não fez? Pula pra próxima favorita.</div></div>
+      <div class="plano-step"><div class="plano-step-num">4</div><div class="plano-step-text"><strong>Semana 4:</strong> Avalia: deu certo? escala. Não deu? a próxima da lista. 70% da renda extra vai pra dívida.</div></div>
+    </div>
+  `;
+  bindFavBtns();
+}
+
+// === TABS ===
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.quiz-panel, .lista-panel, .favoritas-panel').forEach(p => p.classList.remove('active-panel'));
+    const target = t.dataset.tab;
+    document.getElementById('panel-' + target).classList.add('active-panel');
+    if (target === 'quiz') renderQuiz();
+    if (target === 'lista') renderLista();
+    if (target === 'favoritas') renderFavoritas();
+  });
+});
+
+// === INIT ===
+load();
+renderQuiz();
+renderLista();
+renderFavoritas();
+</script>
+
+</body>
+</html>
