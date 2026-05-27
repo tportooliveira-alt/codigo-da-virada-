@@ -13,6 +13,7 @@ function Pricing() {
       from: null,
       cta: 'Quero o Segredo por R$ 9,90',
       ctaTone: 'ghost',
+      checkout: 'https://pay.kiwify.com.br/I1vQLQA',
       cover: 'assets/CAPA_LIVRO_POPULAR.jpg',
       includes: [
         'Ebook curto (a essência do método)',
@@ -137,7 +138,7 @@ function Pricing() {
   );
 }
 
-function PriceCard({ tag, name, forWho, price, from, cta, ctaTone, featured, includes, missing, footnote, cover }) {
+function PriceCard({ tag, name, forWho, price, from, cta, ctaTone, featured, includes, missing, footnote, cover, checkout }) {
   return (
     <article
       className={`relative liquid-glass card-hover border p-7 md:p-8 h-full flex flex-col overflow-hidden ${
@@ -234,16 +235,33 @@ function PriceCard({ tag, name, forWho, price, from, cta, ctaTone, featured, inc
       </div>
 
       <div className="relative mt-8">
-        <button
-          className={`w-full rounded-full py-4 text-[15px] font-medium transition-all inline-flex items-center justify-center gap-2 ${
-            ctaTone === 'gold'
-              ? 'btn-gold'
-              : 'btn-ghost text-white'
-          }`}
-        >
-          {cta}
-          <Icon.Arrow className="w-4 h-4" />
-        </button>
+        {checkout ? (
+          <a
+            href={checkout}
+            target="_blank"
+            rel="noopener"
+            className={`w-full rounded-full py-4 text-[15px] font-medium transition-all inline-flex items-center justify-center gap-2 ${
+              ctaTone === 'gold'
+                ? 'btn-gold'
+                : 'btn-ghost text-white'
+            }`}
+          >
+            {cta}
+            <Icon.Arrow className="w-4 h-4" />
+          </a>
+        ) : (
+          <button
+            onClick={() => scrollTo('precos')}
+            className={`w-full rounded-full py-4 text-[15px] font-medium transition-all inline-flex items-center justify-center gap-2 ${
+              ctaTone === 'gold'
+                ? 'btn-gold'
+                : 'btn-ghost text-white'
+            }`}
+          >
+            {cta}
+            <Icon.Arrow className="w-4 h-4" />
+          </button>
+        )}
         <div className="mt-3 text-center text-[11.5px] text-white/40">{footnote}</div>
       </div>
     </article>
